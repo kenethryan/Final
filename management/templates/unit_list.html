@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Management</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        .log-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            color: black;
+        }
+
+        .status-stand_by {
+            background-color: #6c757d;
+        }
+
+        .status-in_use {
+            background-color: #28a745;
+        }
+
+        .status-under_maintenance {
+            background-color: #dc3545;
+        }
+
+        .status-out_of_service {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .text-success, .text-danger, .text-warning, .text-info {
+            color: black !important;
+        }
+
+        .action-btn {
+            min-width: 80px;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 25px;
+        }
+
+        .driver-select {
+            min-width: 180px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .empty-state i {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #dee2e6;
+        }
+
+        .unit-info {
+            font-weight: 600;
+            color: #0d6efd;
+        }
+
+        .driver-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .table-container {
+                padding: 15px;
+            }
+
+            .driver-select {
+                min-width: 150px;
+            }
+
+            .action-btn {
+                min-width: 70px;
+                padding: 5px;
+            }
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1060;
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            outline: 0;
+        }
+
+        .modal-dialog {
+            position: relative;
+            width: auto;
+            margin: 0.5rem;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 0.3rem;
+            outline: 0;
+        }
+        tr[data-unit-id]:hover {
+            background-color: #f8f9fa;
+        }
+        .amount-input {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background-color: #f8f9fa;
+            text-align: right;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .amount-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+            background-color: white;
+        }
+
+        .fst-italic {
+            font-style: italic;
+        }
+
+        .driver-option.active {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .driver-option:not([disabled]):hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .pagination .page-link {
+            color: black;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        /* Custom style for Unit Actions Modal buttons */
+        #unitActionsModal .d-grid.gap-2 > button {
+            background-color: #adb5bd !important; /* grey */
+            color: #212529 !important;
+            border: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        #unitActionsModal .d-grid.gap-2 > button:hover, 
+        #unitActionsModal .d-grid.gap-2 > button:focus {
+            background-color: #ffe066 !important; /* yellow */
+            color: #212529 !important;
+        }
+        #unitActionsModal .d-grid.gap-2 > button:active {
+            background-color: #ffd60a !important;
+            color: #212529 !important;
+        }
+        /* Keep icon color consistent */
+        #unitActionsModal .d-grid.gap-2 > button i {
+            color: inherit !important;
+        }
+        /* Remove default btn-* background for these buttons */
+        #unitActionsModal .d-grid.gap-2 > button.btn-info,
+        #unitActionsModal .d-grid.gap-2 > button.btn-warning,
+        #unitActionsModal .d-grid.gap-2 > button.btn-secondary,
+        #unitActionsModal .d-grid.gap-2 > button.btn-primary {
+            background-color: #adb5bd !important;
+            color: #212529 !important;
+            border: none;
+        }
+        #unitActionsModal .d-grid.gap-2 > button.btn-info:hover,
+        #unitActionsModal .d-grid.gap-2 > button.btn-warning:hover,
+        #unitActionsModal .d-grid.gap-2 > button.btn-secondary:hover,
+        #unitActionsModal .d-grid.gap-2 > button.btn-primary:hover {
+            background-color: #ffe066 !important;
+            color: #212529 !important;
+        }
+        #unitActionsModal .d-grid.gap-2 > button.btn-info:active,
+        #unitActionsModal .d-grid.gap-2 > button.btn-warning:active,
+        #unitActionsModal .d-grid.gap-2 > button.btn-secondary:active,
+        #unitActionsModal .d-grid.gap-2 > button.btn-primary:active {
+            background-color: #ffd60a !important;
+            color: #212529 !important;
+        }
+    </style>
+</head>
+<body>
+{% include 'structure/nav.html' %}
+
+<div class="content">
+    <div class="container mt-2">
+        <div class="date-time" id="current-date-time"></div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-2">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container table-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Unit Management</h1>
+            {% if user.is_superuser %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#unitFormModal" style="color: black;">
+                <i class="fas fa-plus me-1"></i> Add Unit
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="GET" action=".">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control"
+                           placeholder="Search by Unit PO" value="{{ search_query }}">
+                    <button type="submit" class="btn btn-primary text-dark">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    {% if search_query %}
+                    <a href="." class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        {% if page_obj %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Unit PO</th>
+                        <th>Manufactured</th>
+                        <th>Status</th>
+                        <th>Driver</th>
+                        <th>Device</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unit in page_obj %}
+                    <tr data-unit-id="{{ unit.id }}" style="cursor: pointer;">
+                        <td class="unit-info">{{ unit.unit_PO }}</td>
+                        <td>{{ unit.unit_made|date:"M d, Y" }}</td>
+                        <td>
+                            <span class="status-badge status-{{ unit.status }}">
+                                {{ unit.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="driver-info">
+                            {% if unit.driver %}
+                                {{ unit.driver.driver_name }} ({{ unit.driver.driver_PD }})
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if unit.flespi_device_id %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-danger"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-truck"></i>
+            <h3>No Units Found</h3>
+            <p>There are currently no units in the system</p>
+            <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#unitFormModal">
+                <i class="fas fa-plus me-1"></i> Add Your First Unit
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Unit Form Modal -->
+<div class="modal fade" id="unitFormModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Unit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form method="post" action="{% url 'management:add_unit' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="unit_PO" class="form-label">Unit PO*</label>
+                        <input type="text" class="form-control" id="unit_PO" name="unit_PO" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unit_made" class="form-label">Manufacture Date*</label>
+                        <input type="date" class="form-control" id="unit_made" name="unit_made" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Save Unit
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Unit Actions Modal -->
+<div class="modal fade" id="unitActionsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Unit Actions - <span id="selectedUnitPO"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <input type="hidden" id="modalUnitId" value="">
+            <div class="modal-body text-center">
+                <div class="d-grid gap-2">
+                    <!-- Info Button -->
+                    <button type="button" class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#unitInfoModal">
+                        <i class="fas fa-info-circle me-2"></i> Unit Info
+                    </button>
+
+                    {% if user.is_superuser %}
+                    <!-- History Button -->
+                    <button type="button" class="btn btn-warning btn-lg" data-bs-toggle="modal" data-bs-target="#rentalHistoryModal">
+                        <i class="fas fa-history me-2"></i> Rental History
+                    </button>
+
+                    <!-- Maintenance History Button -->
+                    <button type="button" class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#maintenanceHistoryModal">
+                        <i class="fas fa-tools me-2"></i> Maintenance History
+                    </button>
+
+                    <!-- Status Change Button -->
+                    <button type="button" class="btn btn-secondary btn-lg" id="statusChangeBtn" data-bs-toggle="modal" data-bs-target="#statusChangeModal">
+                        <i class="fas fa-exchange-alt me-2"></i> Change Status
+                    </button>
+
+                    <!-- Device Button -->
+                    <button type="button" class="btn btn-primary btn-lg" id="deviceBtn" data-bs-toggle="modal" data-bs-target="#assignDeviceModal">
+                        <i class="fas fa-microchip me-2"></i> Manage Device
+                    </button>
+
+                    <!-- Statistics Button -->
+                    <button type="button" class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#unitStatsModal">
+                        <i class="fas fa-chart-bar me-2"></i> Unit Statistics
+                    </button>
+                    {% endif %}
+
+                    <!-- Dynamic Rent/Return Button -->
+                    <div id="rentReturnSection"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Unit Info Modal -->
+<div class="modal fade" id="unitInfoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unit Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="unitInfoContent">
+                <!-- Unit info will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rental History Modal -->
+<div class="modal fade" id="rentalHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Rental History - <span id="historyUnitPO"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Driver</th>
+                                <th>Date and Time Borrowed</th>
+                                <th>Date & Time Returned</th>
+                                <th>Payment Amount</th>
+                                <th>Extra Fund Deduction</th>
+                                <th>Payment Method</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rentalHistoryBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Maintenance History Modal -->
+<div class="modal fade" id="maintenanceHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Maintenance History - <span id="maintenanceUnitPO"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Reported Date</th>
+                                <th>Status</th>
+                                <th>Fixed Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maintenanceHistoryBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rent/Assign Driver Modal -->
+<div class="modal fade" id="assignDriverModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Assign Driver</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" id="assignDriverForm" action="{% url 'management:unit_assign_driver' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="unit_id" id="assignUnitId">
+                    <input type="hidden" name="driver_id" id="selectedDriverId">
+                    
+                    <!-- Search Bar -->
+                    <div class="mb-3">
+                        <label for="driverSearch" class="form-label">Search Driver</label>
+                        <input type="text" class="form-control" id="driverSearch" 
+                               placeholder="Type driver name or PD number...">
+                    </div>
+
+                    <!-- Driver List -->
+                    <div class="driver-list" style="max-height: 300px; overflow-y: auto;">
+                        <div class="list-group" id="driverList">
+                            <!-- Driver buttons will be dynamically inserted here -->
+                        </div>
+                        <div id="noResultsMessage" class="alert alert-info mt-2" style="display: none;">
+                            No drivers found matching your search
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="assignDriverBtn" disabled>
+                        <i class="fas fa-check"></i> Assign
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Return/Remittance Modal -->
+<div class="modal fade" id="remittanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Process Payment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'management:confirm_remittance' 0 %}" id="remittanceForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h5>Driver Information</h5>
+                        <p>Driver: <strong><span id="driverName">None</span></strong></p>
+                        <p>Current Extra Fund: ₱<span id="driverSavings">0.00</span></p>
+                        <p>Current Rental Balance: ₱<span id="driverDebt">0.00</span></p>
+                    </div>
+                    <input type="hidden" name="unit_id" id="remittanceUnitId">
+
+                    <div class="mb-3">
+                        <label class="form-label">Payment Amount</label>
+                        <input type="number" name="cash_amount" class="form-control amount-input"
+                               step="0.01" min="0" required placeholder="Enter payment amount">
+                    </div>
+
+                    <div class="alert alert-info">
+                        Payment Today: ₱<span class="remittance-amount-display">0.00</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check me-1"></i> Confirm Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Warning Modal -->
+<div class="modal fade" id="warningModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Warning</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="warningMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction Log Modal -->
+<div class="modal fade" id="transactionLogModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title">Transaction History</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="transaction-log" class="border p-3 bg-light" style="max-height: 300px; overflow-y: auto;">
+                    <ul id="log-list" class="list-unstyled mb-0"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Device Modal -->
+<div class="modal fade" id="assignDeviceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="deviceModalTitle">Assign Device</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" id="deviceForm" action="{% url 'management:assign_device' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="unit_id" id="deviceUnitId">
+                    <div class="mb-3">
+                        <label for="device_imei" class="form-label">Device IMEI</label>
+                        <input type="text" class="form-control" id="device_imei" name="device_imei" required
+                               placeholder="Enter device IMEI (e.g., 9170138411)">
+                        <small class="form-text text-muted">
+                            Enter the IMEI number of the device. A Flespi device will be automatically created or linked.
+                        </small>
+                    </div>
+                    <div id="currentDeviceInfo" class="alert alert-info" style="display: none;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>Current device IMEI: <span id="currentDeviceImei"></span></div>
+                        <div>Flespi device ID: <span id="currentDeviceId"></span></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-info" id="deviceSubmitBtn">
+                        <i class="fas fa-save me-1"></i> Save Device
+                    </button>
+                    <button type="button" class="btn btn-danger" id="deleteDeviceBtn" style="display: none;">
+                        <i class="fas fa-trash-alt me-1"></i> Delete Device
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Status Change Modal -->
+<div class="modal fade" id="statusChangeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title">Change Unit Status</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="statusChangeForm" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="unit_id" id="statusUnitId">
+                    <div class="mb-3">
+                        <label for="new_status" class="form-label">New Status</label>
+                        <select class="form-select" id="new_status" name="status" required>
+                            <option value="out_of_service">Out of Service</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Warning: Setting status to "Out of Service" is permanent and cannot be reversed.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Update Status
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Unit Statistics Modal -->
+<div class="modal fade" id="unitStatsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Unit Statistics - <span id="statsUnitPO"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Maintenance Warning Alert -->
+                <div id="maintenanceWarning" class="alert alert-danger mb-4" style="display: none;">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">Warning: Excessive Maintenance Reports!</h5>
+                            <p class="mb-2">This unit has 20 or more maintenance reports within the last month, indicating potential serious issues.</p>
+                            <button type="button" id="setOutOfServiceBtn" class="btn btn-danger">
+                                <i class="fas fa-ban me-1"></i> Set Unit to Out of Service
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">Remittance Statistics</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Total Remittances</h6>
+                                    <p class="h4" id="totalRemittances">0</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Total Amount</h6>
+                                    <p class="h4 text-success" id="totalAmount">₱0.00</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Average Remittance</h6>
+                                    <p class="h4 text-info" id="averageRemittance">₱0.00</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Last Remittance</h6>
+                                    <p class="h4 text-secondary" id="lastRemittance">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Maintenance Statistics</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Total Maintenance Reports</h6>
+                                    <p class="h4" id="totalMaintenance">0</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Reports in Last 30 Days</h6>
+                                    <p class="h4 text-warning" id="monthlyMaintenance">0</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Last Maintenance</h6>
+                                    <p class="h4 text-secondary" id="lastMaintenance">-</p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Confirmation Modal -->
+<div class="modal fade" id="paymentConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Confirm Payment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to process this payment?</p>
+                <ul>
+                    <li><strong>Driver:</strong> <span id="confirmDriverName"></span></li>
+                    <li><strong>Payment Amount:</strong> ₱<span id="confirmPaymentAmount"></span></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmPaymentBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-primary log-toggle-btn rounded-circle" data-bs-toggle="modal" data-bs-target="#transactionLogModal" aria-label="Open transaction log">
+    <i class="fas fa-history"></i>
+</button>
+
+<script type="application/json" id="drivers-data">
+[
+    {% for driver in drivers %}
+    {
+        "id": {{ driver.id }},
+        "name": "{{ driver.driver_name|escapejs }}",
+        "pd": "{{ driver.driver_PD|escapejs }}",
+        "status": "{{ driver.status }}",
+        "assigned": {% if driver.id in assigned_drivers %}true{% else %}false{% endif %}
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+// Parse drivers JSON
+const allDrivers = JSON.parse(document.getElementById('drivers-data').textContent);
+
+function renderDriverOptions(filteredDrivers) {
+    driverList.innerHTML = '';
+    filteredDrivers.forEach(driver => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center driver-option';
+        btn.setAttribute('data-driver-id', driver.id);
+        btn.setAttribute('data-pd', driver.pd);
+        btn.setAttribute('data-name', driver.name);
+        if (driver.status === 'inactive' || driver.status === 'on_leave' || driver.assigned) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        }
+        btn.innerHTML = `<div><span class="driver-name">${driver.name}</span> <small class="text-muted ms-2">(${driver.pd})</small></div>`;
+        if (driver.status === 'inactive') {
+            btn.innerHTML += '<span class="badge bg-secondary">Inactive</span>';
+        } else if (driver.status === 'on_leave') {
+            btn.innerHTML += '<span class="badge bg-warning text-dark">On Leave</span>';
+        } else if (driver.assigned) {
+            btn.innerHTML += '<span class="badge bg-info">Assigned</span>';
+        }
+        // Selection logic
+        btn.addEventListener('click', function() {
+            if (!btn.disabled) {
+                // Remove active from all
+                driverList.querySelectorAll('.driver-option').forEach(opt => opt.classList.remove('active'));
+                btn.classList.add('active');
+                selectedDriverId.value = driver.id;
+                assignDriverBtn.disabled = false;
+            }
+        });
+        driverList.appendChild(btn);
+    });
+}
+
+function logTransaction(message) {
+    const logKey = 'unitListTransactionLog';
+    const username = "{{ user.username|escapejs }}";
+    const now = new Date();
+    const timestamp = now.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    const entry = `${timestamp} - ${username} - ${message}`;
+    let transactions = JSON.parse(localStorage.getItem(logKey)) || [];
+    transactions.push(entry);
+    // Keep only the last 100 logs
+    if (transactions.length > 100) transactions = transactions.slice(-100);
+    localStorage.setItem(logKey, JSON.stringify(transactions));
+}
+
+// Re-add this function to display the transaction log
+function loadTransactionLog() {
+    const logList = document.getElementById('log-list');
+    const transactions = JSON.parse(localStorage.getItem('unitListTransactionLog')) || [];
+    logList.innerHTML = '';
+    if (transactions.length === 0) {
+        logList.innerHTML = '<li class="text-muted">No transactions recorded yet</li>';
+        return;
+    }
+    transactions.slice().reverse().forEach(transaction => {
+        const [timestamp, username, message] = transaction.split(' - ');
+        const listItem = document.createElement('li');
+        listItem.className = 'py-2 border-bottom';
+        listItem.innerHTML = `
+            <div class="d-flex justify-content-between">
+                <span>${message} <small class="text-muted">(by ${username})</small></span>
+                <small class="text-muted">${timestamp}</small>
+            </div>
+        `;
+        logList.appendChild(listItem);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize variables
+    const logKey = 'unitListTransactionLog';
+    const driverSearch = document.getElementById('driverSearch');
+    const driverList = document.getElementById('driverList');
+    const noResultsMessage = document.getElementById('noResultsMessage');
+    const selectedDriverId = document.getElementById('selectedDriverId');
+    const assignDriverBtn = document.getElementById('assignDriverBtn');
+
+    // Initialize modals
+    const unitFormModal = new bootstrap.Modal(document.getElementById('unitFormModal'));
+    const unitActionsModal = new bootstrap.Modal(document.getElementById('unitActionsModal'));
+    const unitInfoModal = new bootstrap.Modal(document.getElementById('unitInfoModal'));
+    const rentalHistoryModal = new bootstrap.Modal(document.getElementById('rentalHistoryModal'));
+    const maintenanceHistoryModal = new bootstrap.Modal(document.getElementById('maintenanceHistoryModal'));
+    const assignDeviceModal = new bootstrap.Modal(document.getElementById('assignDeviceModal'));
+    const assignDriverModal = new bootstrap.Modal(document.getElementById('assignDriverModal'));
+
+    // Handle unit creation
+    document.querySelector('#unitFormModal form').addEventListener('submit', function() {
+        const unitPO = this.querySelector('#unit_PO').value;
+        logTransaction(`Added new unit ${unitPO}`);
+    });
+
+    // Handle unit row click
+    document.querySelectorAll('tr[data-unit-id]').forEach(row => {
+        row.addEventListener('click', function(event) {
+            if (event.target.closest('button') || event.target.closest('form')) return;
+
+            const unitId = this.dataset.unitId;
+            const unitPO = this.querySelector('.unit-info').textContent;
+            const hasDriver = this.querySelector('.driver-info').textContent.trim() !== '-';
+            const unitStatus = this.querySelector('.status-badge').classList.contains('status-out_of_service');
+
+            // Update modals
+            document.getElementById('selectedUnitPO').textContent = unitPO;
+            document.getElementById('modalUnitId').value = unitId;
+            document.getElementById('assignUnitId').value = unitId;
+            document.getElementById('remittanceUnitId').value = unitId;
+            document.getElementById('deviceUnitId').value = unitId;
+            document.getElementById('statusUnitId').value = unitId;
+            document.getElementById('remittanceForm').action = "{% url 'management:confirm_remittance' 0 %}".replace('0', unitId);
+
+            // Handle Out of Service status
+            const statusChangeBtn = document.getElementById('statusChangeBtn');
+            const deviceBtn = document.getElementById('deviceBtn');
+            const rentReturnSection = document.getElementById('rentReturnSection');
+
+            if (unitStatus) {
+                if (statusChangeBtn) statusChangeBtn.style.display = 'none';
+                if (deviceBtn) deviceBtn.style.display = 'none';
+                rentReturnSection.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        This unit is out of service and cannot be modified.
+                    </div>`;
+            } else {
+                if (statusChangeBtn) statusChangeBtn.style.display = 'block';
+                if (deviceBtn) deviceBtn.style.display = 'block';
+                const currentStatus = this.querySelector('.status-badge').textContent.trim();
+                if (currentStatus === 'Under Maintenance') {
+                    rentReturnSection.innerHTML = `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-tools me-2"></i>
+                            This unit is under maintenance and cannot be rented.
+                        </div>`;
+                } else {
+                    rentReturnSection.innerHTML = hasDriver ? `
+                        <button type="button" class="btn btn-danger btn-lg"
+                                data-bs-toggle="modal" data-bs-target="#remittanceModal">
+                            <i class="fas fa-undo me-2"></i> Return Unit
+                        </button>` : `
+                        <button type="button" class="btn btn-success btn-lg"
+                                data-bs-toggle="modal" data-bs-target="#assignDriverModal">
+                            <i class="fas fa-user-plus me-2"></i> Rent Unit
+                        </button>`;
+                }
+            }
+
+            // Load unit info
+            fetch(`/management/unit/${unitId}/info/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('unitInfoContent').innerHTML = `
+                        <p><strong>Unit PO:</strong> ${data.unit_PO}</p>
+                        <p><strong>Manufacture Date:</strong> ${formatDateTime(data.unit_made)}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                        ${data.status === 'Out of Service' ? `<p><strong>Out of Service Date:</strong> ${data.updated_at ? formatDateTime(data.updated_at) : 'N/A'}</p>` : ''}
+                        <p><strong>Current Driver:</strong> ${data.driver || 'None'}</p>
+                        <p><strong>Device ID:</strong> ${data.flespi_device_id}</p>
+                    `;
+                });
+
+            new bootstrap.Modal(document.getElementById('unitActionsModal')).show();
+        });
+    });
+
+    // Handle device form submission
+    document.getElementById('deviceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+        const unitId = formData.get('unit_id');
+        const unitPO = document.querySelector(`tr[data-unit-id="${unitId}"] .unit-info`).textContent.trim();
+        const deviceImei = formData.get('device_imei');
+        
+        logTransaction(`Assigned device IMEI ${deviceImei} to unit ${unitPO}`);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess(data.message || 'Device assigned successfully');
+                assignDeviceModal.hide();
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showWarning(data.error || 'Failed to assign device');
+            }
+        })
+        .catch(error => {
+            showWarning('Error assigning device: ' + error.message);
+        });
+    });
+
+    // Handle device deletion
+    document.getElementById('deleteDeviceBtn').addEventListener('click', function() {
+        const unitId = document.getElementById('deviceUnitId').value;
+        const unitPO = document.querySelector(`tr[data-unit-id="${unitId}"] .unit-info`).textContent.trim();
+        const deviceImei = document.getElementById('currentDeviceImei').textContent;
+        
+        logTransaction(`Deleted device ${deviceImei} from unit ${unitPO}`);
+        
+        fetch("{% url 'management:assign_device' %}", {
+            method: 'POST',
+            body: new URLSearchParams({
+                'unit_id': unitId,
+                'device_imei': '',
+                'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess(data.message || 'Device deleted successfully');
+                assignDeviceModal.hide();
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showWarning(data.error || 'Failed to delete device');
+            }
+        })
+        .catch(error => {
+            showWarning('Error deleting device: ' + error.message);
+        });
+    });
+
+    // Payment confirmation modal logic
+    const remittanceForm = document.getElementById('remittanceForm');
+    const paymentConfirmModal = new bootstrap.Modal(document.getElementById('paymentConfirmModal'));
+    let paymentConfirmed = false;
+    remittanceForm.addEventListener('submit', function(e) {
+        if (!paymentConfirmed) {
+        e.preventDefault();
+            // Fill modal info
+            document.getElementById('confirmDriverName').textContent = document.getElementById('driverName').textContent;
+            document.getElementById('confirmPaymentAmount').textContent = remittanceForm.querySelector('input[name="cash_amount"]').value;
+            paymentConfirmModal.show();
+        } else {
+            paymentConfirmed = false; // reset for next time
+        }
+    });
+    document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+        paymentConfirmed = true;
+        paymentConfirmModal.hide();
+        remittanceForm.requestSubmit();
+    });
+
+    // Add event listener for remittance modal
+    document.getElementById('remittanceModal').addEventListener('show.bs.modal', function() {
+        const unitId = document.getElementById('remittanceUnitId').value;
+        
+        // Fetch driver information and remittance amount
+        Promise.all([
+            fetch(`/management/unit/${unitId}/info/`),
+            fetch("{% url 'management:get_remittance_amount' %}")
+        ])
+        .then(responses => Promise.all(responses.map(r => r.json())))
+        .then(([driverData, remittanceData]) => {
+            // Update driver information
+            if (driverData.driver) {
+                document.getElementById('driverName').textContent = driverData.driver;
+                document.getElementById('driverSavings').textContent = driverData.driver_savings || '0.00';
+                document.getElementById('driverDebt').textContent = driverData.driver_debt || '0.00';
+            } else {
+                document.getElementById('driverName').textContent = 'None';
+                document.getElementById('driverSavings').textContent = '0.00';
+                document.getElementById('driverDebt').textContent = '0.00';
+            }
+            // Update remittance amount
+            const remittanceAmount = parseFloat(remittanceData.amount) || 0;
+            document.querySelector('.remittance-amount-display').textContent = remittanceAmount.toFixed(2);
+            const cashInput = document.querySelector('input[name="cash_amount"]');
+            cashInput.placeholder = remittanceAmount.toFixed(2);
+            cashInput.value = '';
+        })
+        .catch(error => {
+            console.error('Error loading data:', error);
+            showWarning('Error loading information');
+        });
+    });
+
+    // Show only available drivers when searched in the Assign Driver modal
+    document.getElementById('assignDriverModal').addEventListener('show.bs.modal', function() {
+        driverSearch.value = '';
+        assignDriverBtn.disabled = true;
+        selectedDriverId.value = '';
+        noResultsMessage.style.display = 'none';
+        driverList.innerHTML = '';
+        // Do not show any drivers by default
+    });
+
+    // Search functionality (filter as before, but only show results when searching)
+    driverSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        assignDriverBtn.disabled = true;
+        selectedDriverId.value = '';
+        driverList.innerHTML = '';
+        noResultsMessage.style.display = 'none';
+        if (!searchTerm) {
+            // Do not show any drivers if search is empty
+            return;
+        }
+        // Only show drivers who are not assigned, active, and not on leave
+        const filtered = allDrivers.filter(driver =>
+            !driver.assigned && driver.status === 'active' &&
+            (driver.name.toLowerCase().includes(searchTerm) || driver.pd.toLowerCase().includes(searchTerm))
+        );
+        if (filtered.length > 0) {
+            renderDriverOptions(filtered);
+        } else {
+            noResultsMessage.style.display = 'block';
+        }
+    });
+
+    // Load transaction log when modal is shown
+    document.getElementById('transactionLogModal').addEventListener('show.bs.modal', loadTransactionLog);
+
+    // Initial load
+    loadTransactionLog();
+
+    function validateDriverSelection(form) {
+        const select = form.querySelector('select[name="driver_id"]');
+        const feedback = form.querySelector('.driver-select-feedback');
+
+        if (!select.value) {
+            select.classList.add('is-invalid');
+            feedback.style.display = 'block';
+            return false;
+        }
+        return true;
+    }
+
+    document.querySelector('#rentalHistoryModal').addEventListener('show.bs.modal', function(event) {
+        const unitId = document.getElementById('modalUnitId').value;
+        fetch(`/management/unit-rental-history/${unitId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('rentalHistoryBody');
+                tbody.innerHTML = data.rentals.map(rental => `
+                    <tr>
+                        <td>${rental.driver}</td>
+                        <td>${formatDateTime(rental.start_date)}</td>
+                        <td>${formatDateTime(rental.returned_at)}</td>
+                        <td>₱${rental.remit_amount}</td>
+                        <td>₱${rental.savings_amount || '0.00'}</td>
+                        <td>${rental.payment_method}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('historyUnitPO').textContent =
+                    document.getElementById('selectedUnitPO').textContent;
+            });
+    });
+
+    // Payment method toggle
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const cashInput = document.querySelector('[name="cash_amount"]');
+            const additionalSavingsInput = document.querySelector('[name="savings_amount"]');
+            const additionalSavingsSection = document.querySelector('.additional-savings-section');
+            const savingsSection = document.querySelector('.savings-section');
+            const requiredAmount = parseFloat(document.querySelector('.remittance-amount-display').textContent.replace('₱', ''));
+
+            switch(this.value) {
+                case 'cash':
+                    cashInput.closest('.cash-section').style.display = 'block';
+                    additionalSavingsSection.style.display = 'block';
+                    savingsSection.style.display = 'none';
+                    cashInput.required = true;
+                    additionalSavingsInput.required = false;
+                    cashInput.value = requiredAmount;
+                    additionalSavingsInput.value = '0';
+                    break;
+                case 'savings':
+                    cashInput.closest('.cash-section').style.display = 'none';
+                    savingsSection.style.display = 'block';
+                    cashInput.required = false;
+                    additionalSavingsInput.required = false;
+                    break;
+                case 'both':
+                    cashInput.closest('.cash-section').style.display = 'block';
+                    additionalSavingsSection.style.display = 'none';
+                    savingsSection.style.display = 'none';
+                    cashInput.required = true;
+                    additionalSavingsInput.required = false;
+                    cashInput.value = requiredAmount;
+                    break;
+            }
+        });
+    });
+
+    function showWarning(message) {
+        document.getElementById('warningMessage').textContent = message;
+        new bootstrap.Modal(document.getElementById('warningModal')).show();
+    }
+
+    function showSuccess(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show mt-2';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.querySelector('.container.mt-2').appendChild(alertDiv);
+        setTimeout(() => alertDiv.remove(), 3000);
+    }
+
+    // Handle maintenance history
+    document.getElementById('maintenanceHistoryModal').addEventListener('show.bs.modal', function(event) {
+        const unitId = document.getElementById('modalUnitId').value;
+        const unitPO = document.getElementById('selectedUnitPO').textContent;
+        document.getElementById('maintenanceUnitPO').textContent = unitPO;
+
+        // Fetch maintenance history
+        fetch(`/management/unit/${unitId}/maintenance-history/`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('maintenanceHistoryBody');
+                tbody.innerHTML = '';
+                
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No maintenance records found</td></tr>';
+                    return;
+                }
+
+                data.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.description}</td>
+                        <td>${formatDateTime(record.reported_date)}</td>
+                        <td>
+                            <span class="badge ${record.is_fixed ? 'bg-success' : 'bg-warning'}">
+                                ${record.is_fixed ? 'Fixed' : 'Active'}
+                            </span>
+                        </td>
+                        <td>${record.fixed_date ? formatDateTime(record.fixed_date) : '-'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching maintenance history:', error);
+                document.getElementById('maintenanceHistoryBody').innerHTML = 
+                    '<tr><td colspan="4" class="text-center text-danger">Error loading maintenance history</td></tr>';
+            });
+    });
+
+    // Handle status change form
+    document.getElementById('statusChangeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const unitId = formData.get('unit_id');
+        const unitPO = document.getElementById('selectedUnitPO').textContent;
+
+        fetch('/management/update-unit-status/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess(`Unit ${unitPO} has been marked as Out of Service`);
+                // Close modals
+                bootstrap.Modal.getInstance(document.getElementById('statusChangeModal')).hide();
+                bootstrap.Modal.getInstance(document.getElementById('unitActionsModal')).hide();
+                // Reload page after a short delay
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                throw new Error(data.error || 'Failed to update status');
+            }
+        })
+        .catch(error => {
+            showWarning(error.message);
+        });
+    });
+
+    // Handle Out of Service warning
+    document.getElementById('new_status').addEventListener('change', function() {
+        const warning = document.getElementById('outOfServiceWarning');
+        warning.style.display = 'block';
+    });
+
+    // Handle unit actions
+    document.querySelectorAll('[data-bs-target="#unitActionsModal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const unitId = this.getAttribute('data-unit-id');
+            const unitPO = this.getAttribute('data-unit-po');
+            document.getElementById('modalUnitId').value = unitId;
+            document.getElementById('selectedUnitPO').textContent = unitPO;
+        });
+    });
+
+    // Handle unit statistics
+    document.getElementById('unitStatsModal').addEventListener('show.bs.modal', function(event) {
+        const unitId = document.getElementById('modalUnitId').value;
+        const unitPO = document.getElementById('selectedUnitPO').textContent;
+        document.getElementById('statsUnitPO').textContent = unitPO;
+
+        // Fetch unit statistics
+        fetch(`/management/unit/${unitId}/statistics/`)
+            .then(response => response.json())
+            .then(data => {
+                // Update remittance statistics
+                document.getElementById('totalRemittances').textContent = data.remittance_stats.total_count;
+                document.getElementById('totalAmount').textContent = `₱${parseFloat(data.remittance_stats.total_amount).toFixed(2)}`;
+                document.getElementById('averageRemittance').textContent = `₱${parseFloat(data.remittance_stats.average_amount).toFixed(2)}`;
+                document.getElementById('lastRemittance').textContent = data.remittance_stats.last_remittance ? 
+                    formatDateTime(data.remittance_stats.last_remittance) : '-';
+
+                // Update maintenance statistics
+                document.getElementById('totalMaintenance').textContent = data.maintenance_stats.total_count;
+                document.getElementById('monthlyMaintenance').textContent = data.maintenance_stats.monthly_count || '0';
+                
+                // Apply warning styling if monthly reports are high
+                const monthlyCount = parseInt(data.maintenance_stats.monthly_count || 0);
+                const monthlyMaintenanceElement = document.getElementById('monthlyMaintenance');
+                
+                if (monthlyCount >= 20) {
+                    monthlyMaintenanceElement.classList.remove('text-warning');
+                    monthlyMaintenanceElement.classList.add('text-danger', 'fw-bold');
+                } else if (monthlyCount >= 10) {
+                    monthlyMaintenanceElement.classList.remove('text-danger');
+                    monthlyMaintenanceElement.classList.add('text-warning', 'fw-bold');
+                } else {
+                    monthlyMaintenanceElement.classList.remove('text-danger', 'text-warning', 'fw-bold');
+                    monthlyMaintenanceElement.classList.add('text-muted');
+                }
+                
+                document.getElementById('lastMaintenance').textContent = data.maintenance_stats.last_maintenance ? 
+                    formatDateTime(data.maintenance_stats.last_maintenance) : '-';
+                const maintenanceStatusEl = document.getElementById('maintenanceStatus');
+                if (maintenanceStatusEl) {
+                    maintenanceStatusEl.textContent = data.maintenance_stats.current_status || '-';
+                }
+                
+                // Check for excessive maintenance reports in the last month
+                const warningElement = document.getElementById('maintenanceWarning');
+                if (monthlyCount >= 20) {
+                    warningElement.style.display = 'block';
+                } else {
+                    warningElement.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading unit statistics:', error);
+                showWarning('Error loading unit statistics');
+            });
+    });
+
+    // Handle "Set to Out of Service" button click
+    document.getElementById('setOutOfServiceBtn').addEventListener('click', function() {
+        // Close the statistics modal
+        bootstrap.Modal.getInstance(document.getElementById('unitStatsModal')).hide();
+        
+        // Open the status change modal
+        const statusChangeModal = new bootstrap.Modal(document.getElementById('statusChangeModal'));
+        statusChangeModal.show();
+        
+        // Set the status dropdown to "out_of_service"
+        document.getElementById('new_status').value = 'out_of_service';
+        
+        // Show a more specific warning message
+        const alertWarning = document.querySelector('#statusChangeModal .alert-warning');
+        alertWarning.innerHTML = `
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Critical Warning:</strong> This unit has 20+ maintenance reports in the last month. 
+            Setting it to "Out of Service" is recommended but cannot be reversed.
+        `;
+    });
+
+    // Handle driver assignment form submission
+    document.getElementById('assignDriverForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const unitId = formData.get('unit_id');
+        const driverId = formData.get('driver_id');
+        const unitPO = document.querySelector(`tr[data-unit-id="${unitId}"] .unit-info`).textContent.trim();
+        const selectedDriver = allDrivers.find(d => d.id === parseInt(driverId));
+        
+        if (!selectedDriver) {
+            showWarning('Please select a driver');
+            return;
+        }
+
+        logTransaction(`Assigned driver ${selectedDriver.name} (${selectedDriver.pd}) to unit ${unitPO}`);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess('Driver assigned successfully');
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showWarning(data.error || 'Failed to assign driver');
+            }
+        })
+        .catch(error => {
+            showWarning('Error assigning driver: ' + error.message);
+        });
+    });
+
+    // Add event listener for device modal
+    document.getElementById('assignDeviceModal').addEventListener('show.bs.modal', function() {
+        const unitId = document.getElementById('deviceUnitId').value;
+        
+        // Fetch unit information to check if it already has a device
+        fetch(`/management/unit/${unitId}/info/`)
+            .then(response => response.json())
+            .then(data => {
+                const deviceImeiInput = document.getElementById('device_imei');
+                const currentDeviceInfo = document.getElementById('currentDeviceInfo');
+                const currentDeviceImei = document.getElementById('currentDeviceImei');
+                const currentDeviceId = document.getElementById('currentDeviceId');
+                const deleteDeviceBtn = document.getElementById('deleteDeviceBtn');
+                
+                // Reset form
+                document.getElementById('deviceForm').reset();
+                
+                // If unit has a device, show current info and delete button
+                if (data.device_imei) {
+                    currentDeviceImei.textContent = data.device_imei;
+                    currentDeviceId.textContent = data.flespi_device_id || 'Not linked';
+                    currentDeviceInfo.style.display = 'block';
+                    deleteDeviceBtn.style.display = 'inline-block';
+                    deviceImeiInput.value = data.device_imei;
+                } else {
+                    currentDeviceInfo.style.display = 'none';
+                    deleteDeviceBtn.style.display = 'none';
+                    deviceImeiInput.value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading unit info:', error);
+                showWarning('Error loading unit information');
+            });
+    });
+
+    // Add style to ensure all numbers are black
+    const style = document.createElement('style');
+    style.textContent = `
+        .h4, h4, .remittance-amount-display {
+            color: black !important;
+        }
+        #totalRemittances, #totalAmount, #averageRemittance, #lastRemittance,
+        #totalMaintenance, #monthlyMaintenance, #lastMaintenance,
+        #maintenanceStatus, #rentalHistoryBody td {
+            color: black !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    function formatDateTime(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        if (isNaN(date)) return dateString;
+        return date.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+    }
+});
+</script>
+</body>
+</html>

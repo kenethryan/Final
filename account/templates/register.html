@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        body {
+            background: url("{% static 'image/bg.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            max-width: 500px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background-color: rgba(13, 110, 253, 0.9);
+            color: white;
+            border-radius: 8px 8px 0 0 !important;
+            padding: 1.5rem;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            background-color: rgba(255, 255, 255, 1);
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+        }
+        .form-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            cursor: pointer;
+        }
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .login-link {
+            color: #0d6efd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .login-link:hover {
+            color: #0b5ed7;
+            text-decoration: underline;
+        }
+        .captcha {
+            margin: 1rem 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .captcha input {
+            border-radius: 8px !important;
+            padding: 0.75rem 1rem !important;
+            background-color: rgba(72, 66, 102, 0.9) !important;
+        }
+        .captcha-image {
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="card">
+        <div class="card-header text-center">
+            <h2 class="mb-0">Create Account</h2>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" action="{% url 'account:register' %}">
+                {% csrf_token %}
+
+                <div class="form-group position-relative">
+                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    <i class="fas fa-user form-icon"></i>
+                </div>
+
+                <div class="form-group position-relative">
+                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    <i class="fas fa-envelope form-icon"></i>
+                </div>
+
+                <div class="form-group position-relative">
+                    <input type="tel" name="phone_number" class="form-control" placeholder="Phone Number" required>
+                    <i class="fas fa-phone form-icon"></i>
+                </div>
+
+                <div class="form-group position-relative">
+                    <input type="password" name="password1" id="password1" class="form-control" placeholder="Password" required>
+                    <i class="fas fa-lock form-icon"></i>
+                    <i class="fas fa-eye-slash password-toggle" id="togglePassword1"></i>
+                </div>
+
+                <div class="form-group position-relative">
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
+                    <i class="fas fa-lock form-icon"></i>
+                    <i class="fas fa-eye-slash password-toggle" id="togglePassword2"></i>
+                </div>
+
+                <div class="form-group">
+                    <div class="captcha">
+                        {{ form.captcha }}
+                    </div>
+                    <small class="text-muted">Complete the CAPTCHA to verify you're human</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'account:login' %}" class="login-link">Already have an account? Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword1 = document.querySelector('#togglePassword1');
+            const togglePassword2 = document.querySelector('#togglePassword2');
+            const password1 = document.querySelector('#password1');
+            const password2 = document.querySelector('#password2');
+
+            function togglePasswordVisibility(toggle, passwordField) {
+                const isPassword = passwordField.type === 'password';
+                passwordField.type = isPassword ? 'text' : 'password';
+                toggle.classList.toggle('fa-eye-slash');
+                toggle.classList.toggle('fa-eye');
+            }
+
+            togglePassword1.addEventListener('click', function() {
+                togglePasswordVisibility(this, password1);
+            });
+
+            togglePassword2.addEventListener('click', function() {
+                togglePasswordVisibility(this, password2);
+            });
+        });
+    </script>
+</body>
+</html>

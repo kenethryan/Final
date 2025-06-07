@@ -1,0 +1,55 @@
+body {
+            background-color: #f0f3f5; /* Light blue-grey background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Use Segoe UI font */
+            color: #333; /* Dark text color */
+        }
+        .container {
+            background-color: #fff; /* White container background */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            padding: 30px;
+            margin-top: 50px; /* Push down from the top */
+            width: 80%; /* Adjust width as needed */
+            margin-left: auto;
+            margin-right: auto;
+            position: relative; /* Set position to relative */
+        }
+        h2 {
+            color: #00695c; /* Dark green heading color */
+            margin-bottom: 30px; /* Add more spacing below the heading */
+            text-align: center; /* Center align heading */
+            font-weight: bold; /* Bold font weight */
+            text-transform: uppercase; /* Uppercase text */
+        }
+        .btn-primary {
+            background-color: #388e3c; /* Green primary button */
+            border-color: #388e3c;
+        }
+        .btn-primary:hover {
+            background-color: #2e7d32; /* Darker green on hover */
+            border-color: #2e7d32;
+        }
+        .btn-danger {
+            background-color: #d32f2f; /* Red danger button */
+            border-color: #d32f2f;
+            width: 70px; /* Adjust button width */
+        }
+        .btn-danger:hover {
+            background-color: #b71c1c; /* Darker red on hover */
+            border-color: #b71c1c;
+        }
+        /* Search bar in upper left corner */
+        .search-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 999; /* Ensure search bar is on top of other content */
+        }
+        /* Align the Add Event button to the right */
+        .add-event-button {
+            text-align: right;
+        }
+        /* Adjust the size of the edit button */
+        .edit-button {
+            width: 70px; /* Adjust button width */
+        }

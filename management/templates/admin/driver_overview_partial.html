@@ -1,0 +1,115 @@
+{% if drivers %}
+<div class="table-custom">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="stats-badges">
+            <span class="badge bg-success me-2 text-dark">
+                Active Drivers: {{ active_drivers }}
+            </span>
+            <span class="badge bg-info me-2 text-dark">
+                Total Extra Fund: ₱{{ total_savings|floatformat:2 }}
+            </span>
+            <span class="badge bg-warning text-dark">
+                Total Debt: ₱{{ total_debt|floatformat:2 }}
+            </span>
+        </div>
+    </div>
+
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Driver</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th>Extra Fund</th>
+                <th>Debt</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+            <tr{% if driver.id in delinquent_driver_ids %} class="table-danger delinquent-row"{% endif %}>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="avatar me-2">
+                            {% if driver.profile_picture %}
+                            <img src="{{ driver.profile_picture.url }}"
+                                 class="rounded-circle"
+                                 width="40"
+                                 height="40"
+                                 alt="{{ driver.driver_name }}">
+                            {% else %}
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                                 style="width: 40px; height: 40px;">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div class="fw-bold">{{ driver.driver_name }}{% if driver.id in delinquent_driver_ids %} <span class="text-danger ms-1" title="Delinquent"><i class="fas fa-exclamation-triangle"></i></span>{% endif %}</div>
+                            <div class="text-muted small">ID: {{ driver.driver_PD }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ driver.contact_number|default:"-" }}</td>
+                <td>
+                    <span class="status-badge {% if driver.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ driver.get_status_display }}
+                        {% if driver.id in delinquent_driver_ids %}
+                        <span class="text-danger ms-1" title="Delinquent"><i class="fas fa-exclamation-triangle"></i></span>
+                        {% endif %}
+                    </span>
+                </td>
+                <td class="text-success">₱{{ driver.savings|floatformat:2 }}</td>
+                <td class="text-danger">₱{{ driver.debt|floatformat:2 }}</td>
+                <td>
+                    <form method="post" action="{% url 'management:toggle_driver_status' driver.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm {% if driver.status == 'active' %}btn-danger{% else %}btn-success{% endif %}">
+                            {% if driver.status == 'active' %}
+                                <i class="bi bi-x-circle"></i> Deactivate
+                            {% else %}
+                                <i class="bi bi-check-circle"></i> Activate
+                            {% endif %}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-5">
+                    <i class="bi bi-emoji-frown fs-4 d-block mb-2"></i>
+                    No drivers found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Driver Overview Pagination -->
+<div class="mt-4">
+    <nav aria-label="Driver Overview pagination">
+        <ul class="pagination justify-content-center">
+            {% if drivers.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="#" data-page="{{ drivers.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in drivers.paginator.page_range %}
+                {% if num > drivers.number|add:"-3" and num < drivers.number|add:"3" %}
+                <li class="page-item {% if num == drivers.number %}active{% endif %}">
+                    <a class="page-link text-dark" href="#" data-page="{{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if drivers.has_next %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="#" data-page="{{ drivers.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %} 

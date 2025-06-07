@@ -1,0 +1,84 @@
+<div class="modal fade" id="remittanceAmountModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Set Remittance Amount</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="remittanceAmountForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="remittanceAmount" class="form-label">Amount (₱)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" class="form-control" id="remittanceAmount" 
+                                   name="amount" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Amount</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Admin Dashboard</h1>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#remittanceAmountModal">
+        <i class="fas fa-cog me-2"></i>Set Remittance Amount
+    </button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load current remittance amount
+    fetch("{% url 'management:update_remittance_amount' %}")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('remittanceAmount').value = data.amount;
+        });
+
+    // Handle form submission
+    document.getElementById('remittanceAmountForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        fetch("{% url 'management:update_remittance_amount' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success alert-dismissible fade show mt-2';
+                alert.innerHTML = `
+                    Remittance amount updated to ₱${data.amount}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.content').prepend(alert);
+                
+                // Close modal
+                bootstrap.Modal.getInstance(document.getElementById('remittanceAmountModal')).hide();
+            } else {
+                // Show error message
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-danger alert-dismissible fade show mt-2';
+                alert.innerHTML = `
+                    ${data.error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.content').prepend(alert);
+            }
+        });
+    });
+});
+</script> 

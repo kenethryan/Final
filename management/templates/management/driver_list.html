@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver List</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        .log-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .action-btn {
+            margin-right: 3px;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .financial-cell {
+            font-weight: 500;
+            color: black;
+        }
+
+        .badge-savings {
+            background-color: #28a745;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .badge-debt {
+            background-color: #dc3545;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .badge-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        #transaction-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .text-success {
+            color: black !important;
+        }
+
+        .text-danger {
+            color: black !important;
+        }
+
+        .pagination .page-link {
+            color: black;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #statementContent, #statementContent * {
+                visibility: visible;
+            }
+            #statementContent {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .modal-dialog {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .modal-content {
+                border: none;
+                box-shadow: none;
+            }
+            .table {
+                border-collapse: collapse;
+            }
+            .table th, .table td {
+                border: 1px solid #dee2e6;
+            }
+        }
+    </style>
+</head>
+<body>
+{% include 'structure/nav.html' %}
+
+<div class="content">
+    <div class="container mt-2">
+        <div class="date-time" id="current-date-time"></div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-2">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container table-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Driver Management</h1>
+            {% if user.is_superuser %}
+            <button type="button" class="btn btn-primary action-add" data-bs-toggle="modal" data-bs-target="#driverFormModal" style="color: black;">
+                <i class="fas fa-plus me-1"></i> Add Driver
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Search Form -->
+        <div class="search-container mb-4 d-flex justify-content-center">
+            <form method="GET" action="." class="w-50">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control"
+                           placeholder="Search by Driver PD, Name, or Contact" value="{{ search_query }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search text-dark"></i>
+                    </button>
+                    {% if search_query %}
+                    <a href="." class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <!-- Delinquent Drivers Toggle Button and Section -->
+        {% if delinquent_drivers %}
+        <div class="mb-4">
+            <button id="toggleDelinquentBtn" class="btn btn-danger mb-2" type="button">
+                Show Delinquent Drivers
+            </button>
+            <div id="delinquentDriversSection" style="display: none;">
+            <h2 class="text-danger">Delinquent Drivers</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-danger">
+                        <tr>
+                            <th>Driver PD</th>
+                            <th>Driver Name</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Extra Fund</th>
+                            <th>Rental Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for driver in delinquent_drivers %}
+                        <tr class="delinquent-row">
+                            <td>{{ driver.driver_PD }}</td>
+                            <td>{{ driver.driver_name }}</td>
+                            <td>{{ driver.contact_number }}</td>
+                            <td>{{ driver.get_status_display }}</td>
+                            <td class="financial-cell text-end">₱{{ driver.savings|floatformat:2 }}</td>
+                            <td class="financial-cell text-end">₱{{ driver.debt|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- End Delinquent Drivers Section -->
+
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Driver PD</th>
+                    <th>Driver Name</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Extra Fund</th>
+                    <th>Rental Balance</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in page_obj %}
+                {% if driver.status != 'fired' %}
+                <tr class="driver-row{% if driver.id in delinquent_driver_ids %} table-danger delinquent-row{% endif %}"
+                    data-id="{{ driver.id }}"
+                    data-pd="{{ driver.driver_PD }}"
+                    data-name="{{ driver.driver_name }}"
+                    data-contact="{{ driver.contact_number }}"
+                    data-status="{{ driver.status }}"
+                    data-savings="{{ driver.savings }}"
+                    data-debt="{{ driver.debt }}"
+                    data-profile="{% if driver.profile_picture %}{{ driver.profile_picture.url }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}">
+                    <td>{{ driver.driver_PD }}</td>
+                    <td>{{ driver.driver_name }}</td>
+                    <td>{{ driver.contact_number }}</td>
+                    <td>
+                        {% if driver.status == 'on_leave' %}
+                            On Leave
+                        {% elif driver.id in assigned_drivers %}
+                            Active
+                        {% else %}
+                            Inactive
+                        {% endif %}
+                        {% if driver.id in delinquent_driver_ids %}
+                        <span class="text-danger ms-1" title="Delinquent"><i class="fas fa-exclamation-triangle"></i></span>
+                        {% endif %}
+                    </td>
+                    <td class="financial-cell text-end">₱{{ driver.savings|floatformat:2 }}</td>
+                    <td class="financial-cell text-end">₱{{ driver.debt|floatformat:2 }}</td>
+                    <td class="text-center">
+                        {% if user.is_superuser %}
+                        <!-- Statement of Account Button -->
+                        <button type="button" class="btn btn-sm btn-secondary action-btn"
+                            data-bs-toggle="modal" data-bs-target="#statementModal"
+                            data-driver-id="{{ driver.id }}" 
+                            data-driver-name="{{ driver.driver_name }}"
+                            title="Statement of Account">
+                            <i class="fas fa-file-invoice"></i>
+                        </button>
+
+                        <!-- Statistics Button -->
+                        <button type="button" class="btn btn-sm btn-info action-btn"
+                            data-bs-toggle="modal" data-bs-target="#driverStatsModal"
+                            data-driver-id="{{ driver.id }}" 
+                            data-driver-name="{{ driver.driver_name }}"
+                            title="Driver Statistics">
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                        {% endif %}
+
+                        <!-- Extra Fund Button -->
+                        <button type="button" class="btn btn-sm btn-info action-btn"
+                            data-bs-toggle="modal" data-bs-target="#extraFundModal"
+                            data-driver-id="{{ driver.id }}" 
+                            data-driver-name="{{ driver.driver_name }}"
+                            data-extra-fund="{{ driver.savings }}"
+                            title="Manage Extra Fund">
+                            <i class="fas fa-wallet"></i>
+                        </button>
+
+                        <!-- Pay Debt Button -->
+                        <button type="button" class="btn btn-sm btn-primary action-btn"
+                            data-bs-toggle="modal" data-bs-target="#payDebtModal"
+                            data-driver-id="{{ driver.id }}" 
+                            data-driver-name="{{ driver.driver_name }}"
+                            data-debt="{{ driver.debt }}"
+                            title="Pay Rental Balance" style="color: black;">
+                            <i class="fas fa-peso-sign"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endif %}
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4">No drivers found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Add Driver Info Modal -->
+<div class="modal fade" id="driverInfoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Driver Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img id="driverProfile" 
+                             class="img-thumbnail mb-3"
+                             alt="Profile Picture"
+                             style="max-width: 200px; height: 200px; object-fit: cover;"
+                             src="{% static 'images/default-profile.jpg' %}">
+                        {% if user.is_superuser %}
+                        <button type="button" class="btn btn-warning w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#driverFormModal">
+                            <i class="fas fa-edit me-1"></i> Edit Driver
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-4">Driver PD</dt>
+                            <dd class="col-sm-8" id="infoPD"></dd>
+
+                            <dt class="col-sm-4">Driver Name</dt>
+                            <dd class="col-sm-8" id="infoName"></dd>
+
+                            <dt class="col-sm-4">Contact Number</dt>
+                            <dd class="col-sm-8" id="infoContact"></dd>
+
+                            <dt class="col-sm-4">Status</dt>
+                            <dd class="col-sm-8" id="infoStatus"></dd>
+
+                            <dt class="col-sm-4">Extra Fund</dt>
+                            <dd class="col-sm-8" id="infoSavings"></dd>
+
+                            <dt class="col-sm-4">Rental Balance</dt>
+                            <dd class="col-sm-8" id="infoDebt"></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Driver Form Modal -->
+<div class="modal fade" id="driverFormModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="driverFormModalLabel">Add New Driver</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="driverForm" method="POST" action="{% url 'management:driver_list' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="driver_id" name="driver_id">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="profile_picture" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="driver_PD" class="form-label">Driver PD*</label>
+                        <input type="text" class="form-control" id="driver_PD" name="driver_PD" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="driver_name" class="form-label">Driver Name*</label>
+                        <input type="text" class="form-control" id="driver_name" name="driver_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact_number" class="form-label">Contact Number*</label>
+                        <input type="text" class="form-control" id="contact_number" name="contact_number" required>
+                    </div>
+                    <input type="hidden" name="status" value="active">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Driver</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal fade" id="withdrawModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Withdraw Extra Fund</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="withdrawForm" method="POST" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="driver_id" id="withdraw_driver_id" value="">
+                    <div class="mb-3">
+                        <label class="form-label">Driver Name</label>
+                        <div class="form-control-plaintext fw-bold" id="withdraw_driver_name"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Available Extra Fund</label>
+                        <div class="form-control-plaintext text-success fw-bold" id="withdraw_driver_savings"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="withdraw_amount" class="form-label">Amount to Withdraw*</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" class="form-control" id="withdraw_amount" name="amount"
+                                   min="0.01" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Confirm Withdrawal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Pay Debt Modal -->
+<div class="modal fade" id="payDebtModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Pay Rental Balance</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="payDebtForm" method="POST" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="driver_id" id="pay_debt_driver_id" value="">
+                    <div class="mb-3">
+                        <label class="form-label">Driver Name</label>
+                        <div class="form-control-plaintext fw-bold" id="pay_debt_driver_name"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Current Rental Balance</label>
+                        <div class="form-control-plaintext text-danger fw-bold" id="pay_debt_driver_debt"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pay_debt_amount" class="form-label">Payment Amount*</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" class="form-control" id="pay_debt_amount" name="amount"
+                                   min="0.01" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction Log Modal -->
+<div class="modal fade" id="transactionLogModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title">Transaction History</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="transaction-log" class="border p-3 bg-light">
+                    <ul id="log-list" class="list-unstyled mb-0"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Extra Fund Modal -->
+<div class="modal fade" id="extraFundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Extra Fund Management</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h5>Driver Information</h5>
+                    <p>Driver: <strong><span id="extraFundDriverName">None</span></strong></p>
+                    <p>Current Extra Fund: ₱<span id="currentExtraFund">0.00</span></p>
+                </div>
+
+                <form id="extraFundForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="driver_id" id="extraFundDriverId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Action</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="action" id="actionDeposit" value="deposit" checked>
+                                <label class="form-check-label" for="actionDeposit">
+                                    Deposit
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="action" id="actionWithdraw" value="withdraw">
+                                <label class="form-check-label" for="actionWithdraw">
+                                    Withdraw
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" name="amount" class="form-control" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="extraFundForm" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statement of Account Modal -->
+<div class="modal fade" id="statementModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title">Statement of Account - <span id="statementDriverName"></span></h5>
+                <div class="ms-auto">
+                    <button type="button" class="btn btn-light btn-sm me-2" onclick="printStatement()">
+                        <i class="fas fa-print me-1"></i> Print
+                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+            <div class="modal-body" id="statementContent">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Current Balance</h6>
+                        <div class="d-flex justify-content-between">
+                            <span>Extra Fund:</span>
+                            <span class="text-success">₱<span id="statementExtraFund">0.00</span></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Rental Balance:</span>
+                            <span class="text-danger">₱<span id="statementDebt">0.00</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <h6>Transaction History</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Credits</th>
+                                <th>Charges</th>
+                                <th>Account Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statementTransactions">
+                            <!-- Transactions will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Driver Statistics Modal -->
+<div class="modal fade" id="driverStatsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Driver Statistics - <span id="statsDriverName"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">Remittance Statistics</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Total Remittances</h6>
+                                    <p class="h4" id="driverTotalRemittances">0</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Total Amount</h6>
+                                    <p class="h4 text-success" id="driverTotalAmount">₱0.00</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Average Remittance</h6>
+                                    <p class="h4 text-info" id="driverAverageRemittance">₱0.00</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Last Remittance</h6>
+                                    <p class="h4 text-secondary" id="driverLastRemittance">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Unit Statistics</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Total Units Assigned</h6>
+                                    <p class="h4" id="driverTotalUnits">0</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Current Unit</h6>
+                                    <p class="h4 text-info" id="driverCurrentUnit">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-primary log-toggle-btn rounded-circle" data-bs-toggle="modal" data-bs-target="#transactionLogModal" aria-label="Open transaction log">
+    <i class="fas fa-history"></i>
+</button>
+
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize variables
+    const logKey = 'transactionLog_driverList';
+
+    // Initialize modals
+    const driverModal = new bootstrap.Modal(document.getElementById('driverFormModal'));
+    const withdrawModal = new bootstrap.Modal(document.getElementById('withdrawModal'));
+    const payDebtModal = new bootstrap.Modal(document.getElementById('payDebtModal'));
+    const transactionLogModal = new bootstrap.Modal(document.getElementById('transactionLogModal'));
+    const infoModal = new bootstrap.Modal(document.getElementById('driverInfoModal'));
+
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Preload default image
+    const defaultImage = new Image();
+    defaultImage.src = "{% static 'images/default-profile.jpg' %}";
+
+    // Add New Driver button handler
+    const addDriverBtn = document.querySelector('.action-add');
+    if (addDriverBtn) {
+        addDriverBtn.addEventListener('click', function() {
+            const form = document.getElementById('driverForm');
+            form.reset();
+            form.action = "{% url 'management:driver_list' %}";
+            document.getElementById('driverFormModalLabel').textContent = 'Add New Driver';
+            document.getElementById('driver_id').value = '';
+            document.getElementById('status').value = 'active';
+        });
+    }
+
+    // Row click handler
+    document.querySelectorAll('.driver-row').forEach(row => {
+        row.addEventListener('click', function(e) {
+            if (e.target.closest('button') || e.target.closest('form')) return;
+
+            const currentRow = this;
+            // Add active class to track which row was clicked
+            document.querySelectorAll('.driver-row').forEach(r => r.classList.remove('active'));
+            currentRow.classList.add('active');
+            
+            // Set default profile image first to avoid broken image
+            const profileImg = document.getElementById('driverProfile');
+            const defaultImagePath = "{% static 'images/default-profile.jpg' %}";
+            
+            if (currentRow.dataset.profile && currentRow.dataset.profile !== "None") {
+                profileImg.src = currentRow.dataset.profile;
+            } else {
+                profileImg.src = defaultImagePath;
+            }
+            
+            // Set fallback in case of error
+            profileImg.onerror = function() {
+                this.src = defaultImagePath;
+                this.onerror = null; // Prevent infinite loop
+            };
+            
+            document.getElementById('infoPD').textContent = currentRow.dataset.pd;
+            document.getElementById('infoName').textContent = currentRow.dataset.name;
+            document.getElementById('infoContact').textContent = currentRow.dataset.contact;
+            document.getElementById('infoStatus').textContent = currentRow.dataset.status;
+            document.getElementById('infoSavings').textContent = `₱${parseFloat(currentRow.dataset.savings).toFixed(2)}`;
+            document.getElementById('infoDebt').textContent = `₱${parseFloat(currentRow.dataset.debt).toFixed(2)}`;
+
+            // Show info modal
+            infoModal.show();
+        });
+    });
+
+    // Transaction log functions
+    function loadTransactionLog() {
+        const logList = document.getElementById('log-list');
+        const transactions = JSON.parse(localStorage.getItem(logKey)) || [];
+        logList.innerHTML = '';
+        if (transactions.length === 0) {
+            logList.innerHTML = '<li class="text-muted">No transactions recorded yet</li>';
+            return;
+        }
+        transactions.slice().reverse().forEach(transaction => {
+            const [timestamp, username, message] = transaction.split(' - ');
+            const listItem = document.createElement('li');
+            listItem.className = 'py-2 border-bottom';
+            listItem.innerHTML = `
+                <div class="d-flex justify-content-between">
+                    <span>${message} <small class="text-muted">(by ${username})</small></span>
+                    <small class="text-muted">${timestamp}</small>
+                </div>
+            `;
+            logList.appendChild(listItem);
+        });
+    }
+
+    function logTransaction(message) {
+        const transactions = JSON.parse(localStorage.getItem(logKey)) || [];
+        transactions.push(new Date().toLocaleString() + ' - ' + '{{ user.username }} - ' + message);
+        localStorage.setItem(logKey, JSON.stringify(transactions));
+        loadTransactionLog();
+    }
+
+    // Withdraw Modal Handling
+    document.getElementById('withdrawModal').addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const driverId = button.getAttribute('data-id');
+        const form = this.querySelector('#withdrawForm');
+
+        form.action = `{% url 'management:withdraw_savings' 0 %}`
+            .replace('0', driverId);
+        document.getElementById('withdraw_driver_name').textContent = button.dataset.name;
+        document.getElementById('withdraw_driver_savings').textContent =
+            `₱${parseFloat(button.dataset.savings).toFixed(2)}`;
+        document.querySelector('#withdraw_amount').max = button.dataset.savings;
+    });
+
+    // Pay Debt Modal
+    const payDebtModalEl = document.getElementById('payDebtModal');
+    if (payDebtModalEl) {
+        payDebtModalEl.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            console.log('Pay Debt Button:', button);
+            console.log('Button Data:', {
+                driverId: button.getAttribute('data-driver-id'),
+                driverName: button.getAttribute('data-driver-name'),
+                debt: button.getAttribute('data-debt')
+            });
+            
+            const driverId = button.getAttribute('data-driver-id');
+            const driverName = button.getAttribute('data-driver-name');
+            const driverDebt = button.getAttribute('data-debt');
+            const form = this.querySelector('#payDebtForm');
+
+            form.action = `{% url 'management:pay_debt' 0 %}`.replace('0', driverId);
+            document.getElementById('pay_debt_driver_name').textContent = driverName;
+            document.getElementById('pay_debt_driver_debt').textContent = `₱${parseFloat(driverDebt).toFixed(2)}`;
+            document.querySelector('#pay_debt_amount').max = driverDebt;
+        });
+    }
+
+    // Form validations
+    document.getElementById('driverForm').addEventListener('submit', function(e) {
+        if (!this.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.add('was-validated');
+            return false;
+        }
+        logTransaction(`Driver ${this.driver_id.value ? 'updated' : 'added'}: ${this.driver_name.value}`);
+        return true;
+    });
+
+    // Withdraw form handling
+    document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        const driverName = document.getElementById('withdraw_driver_name').textContent;
+        const amount = document.getElementById('withdraw_amount').value;
+        
+        if (!amount || parseFloat(amount) <= 0) {
+            alert('Please enter a valid amount');
+            return false;
+        }
+        
+        logTransaction(`Withdrawal of ₱${parseFloat(amount).toFixed(2)} for driver ${driverName}`);
+        this.submit(); // Submit the form after logging
+    });
+    
+    // Pay debt form handling
+    document.getElementById('payDebtForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        const driverName = document.getElementById('pay_debt_driver_name').textContent;
+        const amount = document.getElementById('pay_debt_amount').value;
+        
+        if (!amount || parseFloat(amount) <= 0) {
+            alert('Please enter a valid amount');
+            return false;
+        }
+        
+        logTransaction(`Debt payment of ₱${parseFloat(amount).toFixed(2)} for driver ${driverName}`);
+        this.submit(); // Submit the form after logging
+    });
+
+    // Transaction Log Modal Handling
+    const transactionLogModalEl = document.getElementById('transactionLogModal');
+    if (transactionLogModalEl) {
+        transactionLogModalEl.addEventListener('show.bs.modal', loadTransactionLog);
+    }
+
+    // Add event listener for edit button in driver info modal
+    const editButton = document.querySelector('#driverInfoModal .btn-warning');
+    if (editButton) {
+        editButton.addEventListener('click', function() {
+            // Get data from the active row
+            const activeRow = document.querySelector('.driver-row.active');
+            if (!activeRow) {
+                console.error('No active driver row found');
+                return;
+            }
+            
+            const driverId = activeRow.dataset.id;
+            const driverPD = activeRow.dataset.pd;
+            const driverName = activeRow.dataset.name;
+            const contactNumber = activeRow.dataset.contact;
+            
+            // Update form modal for editing
+            document.getElementById('driverFormModalLabel').textContent = 'Edit Driver';
+            document.getElementById('driver_id').value = driverId;
+            document.getElementById('driver_PD').value = driverPD;
+            document.getElementById('driver_name').value = driverName;
+            document.getElementById('contact_number').value = contactNumber;
+            
+            // Update form action URL for editing
+            document.getElementById('driverForm').action = `{% url 'management:driver_edit' 0 %}`.replace('0', driverId);
+        });
+    }
+
+    // Clear file input when modal closes
+    document.getElementById('driverFormModal').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('profile_picture').value = '';
+    });
+
+    // Extra Fund Modal
+    const extraFundModal = document.getElementById('extraFundModal');
+    if (extraFundModal) {
+        extraFundModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            console.log('Extra Fund Button:', button);
+            console.log('Button Data:', {
+                driverId: button.getAttribute('data-driver-id'),
+                driverName: button.getAttribute('data-driver-name'),
+                extraFund: button.getAttribute('data-extra-fund')
+            });
+            
+            const driverId = button.getAttribute('data-driver-id');
+            const driverName = button.getAttribute('data-driver-name');
+            const extraFund = button.getAttribute('data-extra-fund');
+
+            const form = extraFundModal.querySelector('#extraFundForm');
+            form.action = `/management/driver/${driverId}/update-extra-fund/`;
+
+            extraFundModal.querySelector('#extraFundDriverName').textContent = driverName;
+            extraFundModal.querySelector('#currentExtraFund').textContent = parseFloat(extraFund).toFixed(2);
+            extraFundModal.querySelector('#extraFundDriverId').value = driverId;
+
+            // Reset form
+            form.reset();
+            document.getElementById('actionDeposit').checked = true;
+        });
+    }
+
+    function showAlert(type, message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-2`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.querySelector('.container.mt-2').appendChild(alertDiv);
+        setTimeout(() => alertDiv.remove(), 3000);
+    }
+
+    // Handle Extra Fund Form Submission
+    const extraFundForm = document.getElementById('extraFundForm');
+    if (extraFundForm) {
+        extraFundForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const action = formData.get('action');
+            const amount = parseFloat(formData.get('amount'));
+            const driverId = document.getElementById('extraFundDriverId').value;
+            const currentExtraFund = parseFloat(document.getElementById('currentExtraFund').textContent);
+            
+            if (!driverId) {
+                showAlert('danger', 'Driver ID is missing');
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                showAlert('danger', 'Please enter a valid amount');
+                return;
+            }
+
+            if (action === 'withdraw' && amount > currentExtraFund) {
+                showAlert('danger', 'Withdrawal amount exceeds available extra fund');
+                return;
+            }
+            
+            fetch(`/management/driver/${driverId}/update-extra-fund/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', data.message);
+                    // Update the current extra fund display immediately
+                    const newAmount = action === 'deposit' ? 
+                        currentExtraFund + amount : 
+                        currentExtraFund - amount;
+                    document.getElementById('currentExtraFund').textContent = newAmount.toFixed(2);
+                    // Reload the page after a delay
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showAlert('danger', data.message || 'An error occurred');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', 'An error occurred while processing your request');
+            });
+        });
+    }
+
+    // Statement of Account Modal
+    const statementModal = document.getElementById('statementModal');
+    if (statementModal) {
+        statementModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const driverId = button.getAttribute('data-driver-id');
+            const driverName = button.getAttribute('data-driver-name');
+
+            // Fetch current extra fund and debt from backend
+            fetch(`/management/driver/${driverId}/statistics/`)
+                .then(response => response.json())
+                .then(data => {
+                    const extraFund = data.unit_stats && data.unit_stats.extra_fund ? data.unit_stats.extra_fund : '0.00';
+                    const debt = data.unit_stats && data.unit_stats.debt ? data.unit_stats.debt : '0.00';
+                    const driverNameEl = statementModal.querySelector('#statementDriverName');
+                    if (driverNameEl) driverNameEl.textContent = driverName || 'Unknown Driver';
+                    const extraFundEl = statementModal.querySelector('#statementExtraFund');
+                    if (extraFundEl) extraFundEl.textContent = parseFloat(extraFund).toFixed(2);
+                    const debtEl = statementModal.querySelector('#statementDebt');
+                    if (debtEl) debtEl.textContent = parseFloat(debt).toFixed(2);
+                });
+
+            // Load transactions
+            fetch(`/management/driver/${driverId}/transactions/`)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = statementModal.querySelector('#statementTransactions');
+                    let runningBalance = data.opening_balance || 0;
+                    let rows = [];
+                    // Render each transaction in chronological order (oldest to newest)
+                    (data.transactions || []).forEach(t => {
+                        let charges = '';
+                        let credits = '';
+                        let description = t.type;
+                        if (t.amount > 0) {
+                            credits = `+₱${Math.abs(t.amount).toFixed(2)}`;
+                        } else if (t.amount < 0) {
+                            charges = `-₱${Math.abs(t.amount).toFixed(2)}`;
+                        }
+                        runningBalance += t.amount;
+                        rows.push(`
+                        <tr>
+                            <td>${formatDateTime(t.date)}</td>
+                            <td>${description}</td>
+                            <td>${credits}</td>
+                            <td>${charges}</td>
+                            <td>₱${runningBalance.toFixed(2)}</td>
+                        </tr>
+                        `);
+                    });
+                    tbody.innerHTML = rows.join('');
+                })
+                .catch(error => {
+                    console.error('Error loading transactions:', error);
+                    statementModal.querySelector('#statementTransactions').innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                Error loading transactions
+                            </td>
+                        </tr>
+                    `;
+                });
+        });
+    }
+
+    // Handle driver statistics
+    document.getElementById('driverStatsModal').addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const driverId = button.getAttribute('data-driver-id');
+        const driverName = button.getAttribute('data-driver-name');
+        document.getElementById('statsDriverName').textContent = driverName;
+
+        // Fetch driver statistics
+        fetch(`/management/driver/${driverId}/statistics/`)
+            .then(response => response.json())
+            .then(data => {
+                // Update remittance statistics
+                document.getElementById('driverTotalRemittances').textContent = data.remittance_stats.total_count;
+                document.getElementById('driverTotalAmount').textContent = `₱${parseFloat(data.remittance_stats.total_amount).toFixed(2)}`;
+                document.getElementById('driverAverageRemittance').textContent = `₱${parseFloat(data.remittance_stats.average_amount).toFixed(2)}`;
+                document.getElementById('driverLastRemittance').textContent = data.remittance_stats.last_remittance ? 
+                    formatDateTime(data.remittance_stats.last_remittance) : '-';
+
+                // Update unit statistics
+                document.getElementById('driverTotalUnits').textContent = data.unit_stats.total_units;
+                document.getElementById('driverCurrentUnit').textContent = data.unit_stats.current_unit || '-';
+            })
+            .catch(error => {
+                console.error('Error loading driver statistics:', error);
+                showWarning('Error loading driver statistics');
+            });
+    });
+
+    // Initial load
+    loadTransactionLog();
+
+    // Add a style tag to ensure numbers in transaction rows are black
+    const style = document.createElement('style');
+    style.textContent = `
+        #statementTransactions tr td {
+            color: black !important;
+        }
+        .remittance-amount-display {
+            color: black !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Toggle delinquent drivers section
+    const toggleBtn = document.getElementById('toggleDelinquentBtn');
+    const delinquentSection = document.getElementById('delinquentDriversSection');
+    if (toggleBtn && delinquentSection) {
+        toggleBtn.addEventListener('click', function() {
+            if (delinquentSection.style.display === 'none') {
+                delinquentSection.style.display = '';
+                toggleBtn.textContent = 'Hide Delinquent Drivers';
+            } else {
+                delinquentSection.style.display = 'none';
+                toggleBtn.textContent = 'Show Delinquent Drivers';
+            }
+        });
+    }
+});
+
+function printStatement() {
+    const driverNameEl = document.getElementById('statementDriverName');
+    const extraFundEl = document.getElementById('statementExtraFund');
+    const debtEl = document.getElementById('statementDebt');
+    const driverName = driverNameEl ? driverNameEl.textContent : 'Unknown Driver';
+    const extraFund = extraFundEl ? extraFundEl.textContent : '0.00';
+    const debt = debtEl ? debtEl.textContent : '0.00';
+    // Build the table rows from the modal's transaction table
+    const rows = Array.from(document.querySelectorAll('#statementTransactions tr')).map(tr => {
+        // Switch columns 2 and 3 (Credits and Charges)
+        const tds = Array.from(tr.children);
+        if (tds.length === 5) {
+            // [Date, Description, Credits, Charges, Account Balance]
+            // Swap tds[2] and tds[3]
+            const temp = tds[2].innerHTML;
+            tds[2].innerHTML = tds[3].innerHTML;
+            tds[3].innerHTML = temp;
+        }
+        return `<tr>${tds.map(td => `<td>${td.innerHTML}</td>`).join('')}</tr>`;
+    }).join('');
+    
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    
+    // Write the print-friendly content
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Statement of Account - ${driverName}</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .balance-section {
+                    margin-bottom: 20px;
+                }
+                .balance-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 5px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f8f9fa;
+                }
+                .text-success {
+                    color: #28a745;
+                }
+                .text-danger {
+                    color: #dc3545;
+                }
+                .footer {
+                    margin-top: 30px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h2>Statement of Account</h2>
+                <h3>${driverName}</h3>
+                <p>Generated on: ${new Date().toLocaleString()}</p>
+            </div>
+            <div class="balance-section">
+                <h4>Current Balance</h4>
+                <div class="balance-row">
+                    <span>Extra Fund:</span>
+                    <span class="text-success">₱${extraFund}</span>
+                </div>
+                <div class="balance-row">
+                    <span>Rental Balance:</span>
+                    <span class="text-danger">₱${debt}</span>
+                </div>
+            </div>
+            <h4>Transaction History</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Credits</th>
+                        <th>Charges</th>
+                        <th>Account Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
+            <div class="footer">
+                <p>This is a computer-generated statement and does not require a signature.</p>
+            </div>
+        </body>
+        </html>
+    `);
+    
+    // Wait for content to load then print
+    printWindow.document.close();
+    printWindow.onload = function() {
+        printWindow.print();
+        // Close the window after printing
+        printWindow.onafterprint = function() {
+            printWindow.close();
+        };
+    };
+}
+
+function formatDateTime(dateString) {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    if (isNaN(date)) return dateString;
+    return date.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+}
+</script>
+</body>
+</html>

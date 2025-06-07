@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damage Parts Management</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        body {
+            padding-left: 250px;
+            transition: padding-left 0.3s ease;
+            background-color: #e0e0e0;
+            color: #222;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-left: 0;
+            }
+            .sidebar.show ~ .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        .card-header {
+            font-weight: 600;
+            background-color: #f5f5f5 !important;
+            border-bottom: 1px solid #bdbdbd !important;
+            color: #222 !important;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .form-select,
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            margin-right: 5px;
+            background-color: #757575 !important;
+            border-color: #757575 !important;
+            color: #fff !important;
+        }
+
+        .btn:hover {
+            background-color: #424242 !important;
+            border-color: #424242 !important;
+        }
+
+        .log-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        #transaction-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #f5f5f5 !important;
+            border: 1px solid #bdbdbd !important;
+        }
+
+        .table {
+            background-color: #fafafa !important;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table th, .table td {
+            border: 1px solid #bdbdbd !important;
+            color: #222 !important;
+        }
+
+        .alert-info {
+            background-color: #eeeeee !important;
+            color: #757575 !important;
+        }
+    </style>
+</head>
+<body>
+    {% include 'structure/nav.html' %}
+
+    <div class="main-content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Damage Parts Management</h1>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-dark">
+                    <h5 class="mb-0">Report New Damage</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="damageForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="unit_id" class="form-label">Select Unit</label>
+                                <select class="form-select" id="unit_id" name="unit_id" required>
+                                    <option value="">Choose unit...</option>
+                                    {% for unit in available_units %}
+                                        <option value="{{ unit.id }}">{{ unit.unit_PO }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="damage_description" class="form-label">Damage Description</label>
+                                <input type="text" class="form-control" id="damage_description"
+                                       name="damage_description" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary w-100 text-dark">
+                                    <i class="fas fa-wrench me-1"></i> Report Damage
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Active Damages Table -->
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Active Damages</h5>
+                </div>
+                <div class="card-body">
+                    {% if active_damages %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Unit PO</th>
+                                    <th>Damage Description</th>
+                                    <th>Reported Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for damage in active_damages %}
+                                <tr>
+                                    <td>{{ damage.unit.unit_PO }}</td>
+                                    <td>{{ damage.description }}</td>
+                                    <td>{{ damage.reported_date|date:"M d, Y, h:i A" }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'management:mark_fixed' damage.id %}" class="mark-fixed-form" data-unit-po="{{ damage.unit.unit_PO }}" data-damage-desc="{{ damage.description }}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i> Fixed
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info mb-0">No active damages reported</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Log Modal -->
+    <div class="modal fade" id="transactionLogModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title">Maintenance Log</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="transaction-log" class="border p-3 bg-light">
+                        <ul id="log-list" class="list-unstyled mb-0"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary log-toggle-btn rounded-circle" data-bs-toggle="modal" data-bs-target="#transactionLogModal" aria-label="Open maintenance log">
+        <i class="fas fa-history" aria-hidden="true"></i>
+    </button>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            const logKey = 'damagePartsTransactionLog';
+            const logList = document.getElementById('log-list');
+
+            function loadTransactionLog() {
+                const transactions = JSON.parse(localStorage.getItem(logKey)) || [];
+                logList.innerHTML = '';
+
+                if (transactions.length === 0) {
+                    logList.innerHTML = '<li class="text-muted py-2">No maintenance transactions recorded yet</li>';
+                    return;
+                }
+
+                transactions.slice().reverse().forEach(transaction => {
+                    const [timestamp, username, message] = transaction.split(' - ');
+                    const listItem = document.createElement('li');
+                    listItem.className = 'py-2 border-bottom';
+                    listItem.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${message} <small class="text-muted">(by ${username})</small></span>
+                            <small class="text-muted">${timestamp}</small>
+                        </div>
+                    `;
+                    logList.appendChild(listItem);
+                });
+            }
+
+            function logTransaction(message) {
+                const transactions = JSON.parse(localStorage.getItem(logKey)) || [];
+                transactions.push(new Date().toLocaleString() + ' - ' + '{{ user.username }} - ' + message);
+                localStorage.setItem(logKey, JSON.stringify(transactions));
+                loadTransactionLog();
+            }
+
+            // Handle damage reporting
+            document.getElementById('damageForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const unitSelect = document.getElementById('unit_id');
+                if (!unitSelect.value) {
+                    alert('Please select a unit');
+                    return false;
+                }
+                const unitText = unitSelect.options[unitSelect.selectedIndex].textContent;
+                const damageDesc = document.getElementById('damage_description').value.trim();
+                if (!damageDesc) {
+                    alert('Please enter a damage description');
+                    return false;
+                }
+                logTransaction(`Reported damage for unit ${unitText}: ${damageDesc}`);
+                // Submit the form after a short delay to ensure the log is saved
+                setTimeout(() => { this.submit(); }, 100);
+            });
+
+            // Handle marking damage as fixed
+            document.querySelectorAll('.mark-fixed-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const unitText = this.getAttribute('data-unit-po');
+                    const damageDesc = this.getAttribute('data-damage-desc');
+                    logTransaction(`Marked damage as fixed for unit ${unitText}: ${damageDesc}`);
+                    // Submit the form after a short delay to ensure the log is saved
+                    setTimeout(() => { this.submit(); }, 100);
+                });
+            });
+
+            // Load transaction log when modal is shown
+            document.getElementById('transactionLogModal').addEventListener('show.bs.modal', loadTransactionLog);
+
+            // Initial load
+            loadTransactionLog();
+
+            // Helper for formatting date/time in 12-hour format with '/' divider
+            function formatDateTime(dateString) {
+                if (!dateString) return '-';
+                const date = new Date(dateString);
+                if (isNaN(date)) return dateString;
+                return date.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+            }
+        });
+    </script>
+</body>
+</html>

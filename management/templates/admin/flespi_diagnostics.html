@@ -1,0 +1,117 @@
+{% extends 'structure/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1>Flespi API Diagnostics</h1>
+            <p class="lead">This page helps you diagnose issues with the Flespi API integration.</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">API Base URL:</dt>
+                        <dd class="col-sm-8">{{ base_url }}</dd>
+                        
+                        <dt class="col-sm-4">Mock Mode:</dt>
+                        <dd class="col-sm-8">
+                            {% if mock_mode %}
+                            <span class="badge bg-warning">Enabled</span>
+                            <small class="d-block text-muted mt-1">Using simulated device data</small>
+                            {% else %}
+                            <span class="badge bg-success">Disabled</span>
+                            <small class="d-block text-muted mt-1">Using real API connection</small>
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4">API Token:</dt>
+                        <dd class="col-sm-8">
+                            <span class="text-monospace">{{ flespi_token|slice:":4" }}...{{ flespi_token|slice:"-4:" }}</span>
+                            <small class="d-block text-muted mt-1">Token is masked for security</small>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header {% if api_status.success %}bg-success{% else %}bg-danger{% endif %} text-white">
+                    <h5 class="mb-0">Connection Test</h5>
+                </div>
+                <div class="card-body">
+                    {% if api_status.success %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i> {{ api_status.message }}
+                        </div>
+                        
+                        {% if api_status.devices %}
+                            <p><strong>Found {{ api_status.devices }} devices in your Flespi account.</strong></p>
+                            <p>The API connection is working correctly. You can now use the real API for device tracking.</p>
+                        {% else %}
+                            <p><strong>Connection successful, but no devices found.</strong></p>
+                            <p>You'll need to create devices in your Flespi account or assign devices to units in this application.</p>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i> {{ api_status.message }}
+                        </div>
+                        
+                        {% if api_status.response %}
+                            <div class="mt-3">
+                                <h6>API Response:</h6>
+                                <pre class="bg-light p-3 rounded">{{ api_status.response }}</pre>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mt-3">
+                            <h6>Troubleshooting Tips:</h6>
+                            <ol>
+                                <li>Verify your Flespi token is correct and has not expired</li>
+                                <li>Check if your server can reach flespi.io (network/firewall issues)</li>
+                                <li>Try creating a new token in the Flespi dashboard</li>
+                                <li>Check if your Flespi subscription is active</li>
+                            </ol>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle me-2"></i> How to use the real API</h5>
+                <p>To use the real Flespi API for device tracking:</p>
+                <ol>
+                    <li>Make sure your connection test above is successful</li>
+                    <li>Assign device IMEIs to units using the Unit Management screen</li>
+                    <li>Create devices in your Flespi account or let this application create them automatically</li>
+                    <li>Access the tracking page to see real-time positions from your GPS devices</li>
+                </ol>
+                <p class="mb-0">If you encounter issues, you can always switch back to mock mode by editing the <code>FlespiAPI</code> class in <code>management/flespi.py</code>.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{% url 'management:tracking' %}" class="btn btn-primary">
+                <i class="fas fa-map-marker-alt me-2"></i> Go to Tracking Page
+            </a>
+            <a href="{% url 'management:unit_list' %}" class="btn btn-secondary ms-2">
+                <i class="fas fa-truck me-2"></i> Manage Units
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

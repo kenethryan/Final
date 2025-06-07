@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Import Position History - {{ unit.unit_PO }}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .content {
+            margin-left: 250px; /* Match sidebar width from nav.html */
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+            }
+        }
+        .csv-example {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .file-upload {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    {% include 'structure/nav.html' %}
+    
+    <div class="content">
+        <div class="mt-4">
+            <div class="upload-container">
+                <h2>
+                    <i class="fas fa-file-upload me-2"></i> 
+                    Import Position History
+                </h2>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Importing position data for unit: <strong>{{ unit.unit_PO }}</strong>
+                </div>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-2">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">CSV Format Requirements</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Your CSV file must include the following columns:</p>
+                        <ul>
+                            <li><strong>timestamp</strong> - Date and time in any of these formats:
+                                <ul>
+                                    <li>YYYY-MM-DD HH:MM:SS</li>
+                                    <li>YYYY/MM/DD HH:MM:SS</li>
+                                    <li>MM/DD/YYYY HH:MM:SS</li>
+                                    <li>DD/MM/YYYY HH:MM:SS</li>
+                                    <li>Unix timestamp (seconds since epoch)</li>
+                                </ul>
+                            </li>
+                            <li><strong>latitude</strong> - Decimal latitude (e.g., 14.5995)</li>
+                            <li><strong>longitude</strong> - Decimal longitude (e.g., 120.9842)</li>
+                            <li><strong>speed</strong> - Optional. Speed in km/h</li>
+                        </ul>
+                        
+                        <div class="csv-example">
+                            <strong>Example CSV:</strong><br>
+                            timestamp,latitude,longitude,speed<br>
+                            2023-06-01 08:30:45,14.5995,120.9842,35.5<br>
+                            2023-06-01 08:35:12,14.6012,120.9867,42.1<br>
+                            2023-06-01 08:40:33,14.6050,120.9901,38.7
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="file-upload">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="csv_file" class="form-label">Select CSV File</label>
+                            <input class="form-control" type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'management:tracking' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload me-1"></i> Import Data
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html> 

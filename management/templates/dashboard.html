@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            padding-left: 250px;
+            transition: padding-left 0.3s ease;
+            background-color: #f8f9fa;
+            color: #000;
+        }
+
+        .main-content {
+            padding: 20px;
+            color: #000;
+        }
+
+        .row.dashboard-cards {
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            gap: 0;
+        }
+
+        .dashboard-cards .col-md-2, .dashboard-cards .col-lg-2 {
+            flex: 0 0 20%;
+            max-width: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .dashboard-cards .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            margin-bottom: 0;
+            overflow: hidden;
+            min-height: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-cards .card-body {
+            padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-cards h2 {
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 700;
+            color: #000;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.07);
+            text-align: center;
+        }
+
+        .dashboard-cards h5 {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            color: #000;
+            font-weight: 600;
+            margin-bottom: 0.05rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        .dashboard-cards a {
+            opacity: 0.9;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-weight: 600;
+            color: #000;
+            display: inline-block;
+            margin-top: 0.1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .dashboard-cards a:hover {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-cards .col-md-2, .dashboard-cards .col-lg-2 {
+                flex: 0 0 20%;
+                max-width: 20%;
+            }
+        }
+        @media (max-width: 992px) {
+            .dashboard-cards .col-md-2, .dashboard-cards .col-lg-2 {
+                flex: 0 0 33.3333%;
+                max-width: 33.3333%;
+            }
+        }
+        @media (max-width: 768px) {
+            .dashboard-cards .col-md-2, .dashboard-cards .col-lg-2 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        @media (max-width: 576px) {
+            .dashboard-cards .col-md-2, .dashboard-cards .col-lg-2 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 1.8rem;
+        }
+
+        .stats-card {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+        }
+
+        .stats-card .card-body {
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-card h2 {
+            font-size: 3.2rem;
+            margin: 15px 0;
+            font-weight: 700;
+            color: #000;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stats-card h5 {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .stats-card a {
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+            color: #000;
+            display: inline-block;
+            margin-top: auto;
+        }
+
+        .stats-card a:hover {
+            opacity: 1;
+            transform: translateX(7px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 1.5rem;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #0d6efd;
+            background: none;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            font-weight: 700;
+            background: none;
+        }
+
+        .nav-tabs .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0d6efd;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 700;
+            color: #000;
+            padding: 15px;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 18px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.2);
+            border-color: #86b7fe;
+        }
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1.5rem 1.8rem;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            color: #000;
+            font-size: 1.3rem;
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 18px 22px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .maintenance-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .maintenance-warning i {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: #ffc107;
+        }
+
+        .maintenance-warning .content {
+            flex: 1;
+        }
+
+        .maintenance-warning h5 {
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .maintenance-warning p {
+            margin-bottom: 0;
+        }
+
+        .maintenance-warning .btn {
+            margin-top: 10px;
+        }
+
+        .critical-warning {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .critical-warning i {
+            color: #dc3545;
+        }
+
+        /* Make only the Units Under Maintenance card title smaller */
+        .dashboard-cards .bg-warning .card-title {
+            font-size: 0.93rem;
+            margin-bottom: 0rem;
+        }
+    </style>
+</head>
+<body>
+    {% include 'structure/nav.html' %}
+
+    <div class="main-content">
+        <div class="container">
+            
+            {% if high_maintenance_units %}
+            <div class="maintenance-warning {% if critical_maintenance_units %}critical-warning{% endif %}">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="content">
+                    <h5>Maintenance Warning!</h5>
+                    {% if critical_maintenance_units %}
+                    <p>There are <strong>{{ critical_maintenance_units }} units</strong> with 20+ maintenance reports in the last month!</p>
+                    <a href="{% url 'management:unit_list' %}" class="btn btn-danger btn-sm">Review Critical Units</a>
+                    {% else %}
+                    <p>There are <strong>{{ high_maintenance_units }} units</strong> with 10+ maintenance reports in the last month.</p>
+                    <a href="{% url 'management:unit_list' %}" class="btn btn-warning btn-sm">Review Units</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Stats Cards -->
+            <div class="row dashboard-cards mb-4">
+                <div class="col-md-2 col-lg-2 mb-3">
+                    <div class="card bg-info text-dark stats-card">
+                        <div class="card-body">
+                            <h5 class="card-title" title="Accounts">Accounts</h5>
+                            <h2 class="card-text"><i class="fas fa-user-shield"></i></h2>
+                            <a href="{% url 'management:accounts' %}" class="text-dark">View Accounts <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-lg-2 mb-3">
+                    <div class="card bg-primary text-light stats-card">
+                        <div class="card-body">
+                            <h5 class="card-title" title="Total Units">Total Units</h5>
+                            <h2 class="card-text">{{ total_units }}</h2>
+                            <a href="{% url 'management:unit_list' %}" class="text-light">View Units <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-lg-2 mb-3">
+                    <div class="card bg-success text-light stats-card">
+                        <div class="card-body">
+                            <h5 class="card-title" title="Active Drivers">Active Drivers</h5>
+                            <h2 class="card-text">{{ total_drivers }}</h2>
+                            <a href="{% url 'management:driver_list' %}" class="text-light">View Drivers <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-lg-2 mb-3">
+                    <div class="card bg-warning text-dark stats-card">
+                        <div class="card-body">
+                            <h5 class="card-title" title="Units Under Maintenance">Units Under Maintenance</h5>
+                            <h2 class="card-text">{{ unit_status_counts.under_maintenance }}</h2>
+                            <a href="{% url 'management:unit_list' %}?status=under_maintenance" class="text-dark">View Maintenance <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-lg-2 mb-3">
+                    <div class="card bg-danger text-light stats-card">
+                        <div class="card-body">
+                            <h5 class="card-title" title="Tracking">Tracking</h5>
+                            <h2 class="card-text"><i class="fas fa-map-marker-alt"></i></h2>
+                            <a href="{% url 'management:tracking' %}" class="text-light">View Tracking <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Charts -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-dark fw-bold"><i class="fas fa-chart-line me-2"></i>Income Analysis</h5>
+                    <button class="btn btn-primary btn-sm text-dark" onclick="printCharts()">
+                        <i class="fas fa-print me-2"></i>Print Charts
+                    </button>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs mb-4" id="incomeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#weekly" type="button" role="tab">Weekly Income</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly" type="button" role="tab">Monthly Income</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="incomeTabsContent">
+                        <div class="tab-pane fade show active" id="weekly" role="tabpanel">
+                            <div class="chart-container">
+                                <canvas id="weeklyIncomeChart"></canvas>
+                            </div>
+                            <div class="text-center mt-3">
+                                <p class="text-muted mb-0">Daily income breakdown for the current week</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="monthly" role="tabpanel">
+                            <div class="chart-container">
+                                <canvas id="monthlyIncomeChart"></canvas>
+                            </div>
+                            <div class="text-center mt-3">
+                                <p class="text-muted mb-0">Monthly income overview for the current year</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-money-bill-wave me-2"></i>Recent Payments</h5>
+                    <button type="button" class="btn btn-primary btn-sm text-dark" onclick="printRecentPayments()">
+                        <i class="fas fa-print me-2"></i> Print Report
+                    </button>
+                </div>
+                <div class="card-body">
+                    <form method="GET" class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="start_date" class="form-label fw-bold">Start Date</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date"
+                                   value="{{ request.GET.start_date }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_date" class="form-label fw-bold">End Date</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date"
+                                   value="{{ request.GET.end_date }}">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-filter me-2"></i> Apply Filter
+                            </button>
+                        </div>
+                    </form>
+                    
+                    {% if recent_remittances %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Unit</th>
+                                    <th>Driver</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for remit in recent_remittances %}
+                                <tr>
+                                    <td>{{ remit.date|date:"M d, Y" }}</td>
+                                    <td>{{ remit.unit.unit_PO }}</td>
+                                    <td>{{ remit.driver.driver_name }}</td>
+                                    <td>
+                                      {% if remit.remit_amount < required_amount %}
+                                        <span class="text-danger fw-bold">₱{{ remit.remit_amount|floatformat:2 }}</span>
+                                      {% else %}
+                                        <span class="text-success fw-bold">₱{{ remit.remit_amount|floatformat:2 }}</span>
+                                      {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No recent payments found for the selected period
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% autoescape off %}
+    <script>
+        // Weekly Income Chart
+        const weeklyCtx = document.getElementById('weeklyIncomeChart').getContext('2d');
+        const weeklyChart = new Chart(weeklyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Daily Income',
+                    data: {{ weekly_income|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    hoverBackgroundColor: 'rgba(54, 162, 235, 0.9)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 15000,
+                        ticks: {
+                            stepSize: 3000,
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            },
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Amount (₱)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '₱' + context.raw.toLocaleString();
+                            }
+                        },
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        cornerRadius: 6,
+                        displayColors: false
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+
+        // Monthly Income Chart
+        const monthlyCtx = document.getElementById('monthlyIncomeChart').getContext('2d');
+        const monthlyChart = new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Monthly Income',
+                    data: {{ monthly_income|safe }},
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+                    pointHoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100000,
+                        ticks: {
+                            stepSize: 20000,
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            },
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Amount (₱)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '₱' + context.raw.toLocaleString();
+                            }
+                        },
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        cornerRadius: 6,
+                        displayColors: false
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    </script>
+    {% endautoescape %}
+    <script>
+function printRecentPayments() {
+    // Get the table rows as HTML
+    const tableRows = Array.from(document.querySelectorAll('.table-responsive table tbody tr')).map(tr => {
+        const tds = Array.from(tr.children);
+        // Highlight payments below required amount (red text)
+        let amountCell = tds[3].innerText;
+        if (tds[3].querySelector('.text-danger')) {
+            amountCell = `<span style="color:#dc3545;font-weight:bold;">${amountCell} ⚠️</span>`;
+        } else {
+            amountCell = `<span style="color:#198754;font-weight:bold;">${amountCell}</span>`;
+        }
+        return `<tr>
+            <td>${tds[0].innerText}</td>
+            <td>${tds[1].innerText}</td>
+            <td>${tds[2].innerText}</td>
+            <td>${amountCell}</td>
+        </tr>`;
+    }).join('');
+
+    // Get the date range
+    const startDate = document.getElementById('start_date').value || '';
+    const endDate = document.getElementById('end_date').value || '';
+    const dateRange = (startDate && endDate) ? 
+        `From <b>${startDate}</b> to <b>${endDate}</b>` : 
+        'All Dates';
+
+    // Calculate summary
+    const amounts = Array.from(document.querySelectorAll('.table-responsive table tbody tr')).map(tr => {
+        const amt = tr.children[3].innerText.replace(/[₱,]/g, '');
+        return parseFloat(amt) || 0;
+    });
+    const totalPayments = amounts.reduce((a, b) => a + b, 0);
+    const numPayments = amounts.length;
+    const belowRequired = Array.from(document.querySelectorAll('.table-responsive table tbody tr .text-danger')).length;
+    const aboveOrEqualRequired = numPayments - belowRequired;
+
+    // Get username if available (Django template variable)
+    const username = "{{ user.username|default:'-' }}";
+
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+
+    // Write the print-friendly content
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Recent Payments Report</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 30px;
+                    color: #222;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .header img {
+                    max-height: 60px;
+                    margin-bottom: 10px;
+                }
+                .header h2 {
+                    margin-bottom: 5px;
+                }
+                .date-range {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-size: 1.1em;
+                }
+                .summary {
+                    margin-bottom: 20px;
+                    font-size: 1.1em;
+                }
+                .summary span {
+                    display: inline-block;
+                    margin-right: 30px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 10px;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 10px 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f8f9fa;
+                    font-weight: bold;
+                }
+                tr:nth-child(even) {
+                    background-color: #f4f4f4;
+                }
+                .footer {
+                    margin-top: 30px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                }
+                @media print {
+                    @page { margin: 20mm; }
+                    body { margin: 0; }
+                    .footer:after {
+                        content: "Page " counter(page);
+                        float: right;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <!-- Optional: Add your logo here -->
+                <!-- <img src="YOUR_LOGO_URL" alt="Company Logo"> -->
+                <h2>Recent Payments Report</h2>
+                <div class="date-range">${dateRange}</div>
+                <div>Generated on: ${new Date().toLocaleString()}</div>
+            </div>
+            <div class="summary">
+                <span><b>Total Payments:</b> ₱${totalPayments.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+                <span><b>Number of Payments:</b> ${numPayments}</span>
+                <span><b>Below Required:</b> ${belowRequired}</span>
+                <span><b>On/Above Required:</b> ${aboveOrEqualRequired}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Unit</th>
+                        <th>Driver</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+            <div class="footer">
+                <p>Prepared by: <b>${username}</b></p>
+                <p>This is a computer-generated report and does not require a signature.</p>
+            </div>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.onload = function() {
+        printWindow.print();
+        printWindow.onafterprint = function() {
+            printWindow.close();
+        };
+    };
+}
+</script>
+</div> <!-- end of .main-content and .container -->
+
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- All other scripts here -->
+
+<!-- Place printRecentPayments at the very end, just before </body> -->
+<script>
+function printRecentPayments() {
+    // Get the table rows as HTML
+    const tableRows = Array.from(document.querySelectorAll('.table-responsive table tbody tr')).map(tr => {
+        const tds = Array.from(tr.children);
+        // Highlight payments below required amount (red text)
+        let amountCell = tds[3].innerText;
+        if (tds[3].querySelector('.text-danger')) {
+            amountCell = `<span style="color:#dc3545;font-weight:bold;">${amountCell} ⚠️</span>`;
+        } else {
+            amountCell = `<span style="color:#198754;font-weight:bold;">${amountCell}</span>`;
+        }
+        return `<tr>
+            <td>${tds[0].innerText}</td>
+            <td>${tds[1].innerText}</td>
+            <td>${tds[2].innerText}</td>
+            <td>${amountCell}</td>
+        </tr>`;
+    }).join('');
+
+    // Get the date range
+    const startDate = document.getElementById('start_date').value || '';
+    const endDate = document.getElementById('end_date').value || '';
+    const dateRange = (startDate && endDate) ? 
+        `From <b>${startDate}</b> to <b>${endDate}</b>` : 
+        'All Dates';
+
+    // Calculate summary
+    const amounts = Array.from(document.querySelectorAll('.table-responsive table tbody tr')).map(tr => {
+        const amt = tr.children[3].innerText.replace(/[₱,]/g, '');
+        return parseFloat(amt) || 0;
+    });
+    const totalPayments = amounts.reduce((a, b) => a + b, 0);
+    const numPayments = amounts.length;
+    const belowRequired = Array.from(document.querySelectorAll('.table-responsive table tbody tr .text-danger')).length;
+    const aboveOrEqualRequired = numPayments - belowRequired;
+
+    // Get username if available (Django template variable)
+    const username = "{{ user.username|default:'-' }}";
+
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+
+    // Write the print-friendly content
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Recent Payments Report</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 30px;
+                    color: #222;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .header img {
+                    max-height: 60px;
+                    margin-bottom: 10px;
+                }
+                .header h2 {
+                    margin-bottom: 5px;
+                }
+                .date-range {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-size: 1.1em;
+                }
+                .summary {
+                    margin-bottom: 20px;
+                    font-size: 1.1em;
+                }
+                .summary span {
+                    display: inline-block;
+                    margin-right: 30px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 10px;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 10px 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f8f9fa;
+                    font-weight: bold;
+                }
+                tr:nth-child(even) {
+                    background-color: #f4f4f4;
+                }
+                .footer {
+                    margin-top: 30px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                }
+                @media print {
+                    @page { margin: 20mm; }
+                    body { margin: 0; }
+                    .footer:after {
+                        content: "Page " counter(page);
+                        float: right;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <!-- Optional: Add your logo here -->
+                <!-- <img src="YOUR_LOGO_URL" alt="Company Logo"> -->
+                <h2>Recent Payments Report</h2>
+                <div class="date-range">${dateRange}</div>
+                <div>Generated on: ${new Date().toLocaleString()}</div>
+            </div>
+            <div class="summary">
+                <span><b>Total Payments:</b> ₱${totalPayments.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+                <span><b>Number of Payments:</b> ${numPayments}</span>
+                <span><b>Below Required:</b> ${belowRequired}</span>
+                <span><b>On/Above Required:</b> ${aboveOrEqualRequired}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Unit</th>
+                        <th>Driver</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+            <div class="footer">
+                <p>Prepared by: <b>${username}</b></p>
+                <p>This is a computer-generated report and does not require a signature.</p>
+            </div>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.onload = function() {
+        printWindow.print();
+        printWindow.onafterprint = function() {
+            printWindow.close();
+        };
+    };
+}
+</script>
+</body>
+</html>

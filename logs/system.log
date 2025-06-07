@@ -1,0 +1,825 @@
+Watching for file changes with StatReloader
+Waiting for apps ready_event.
+Apps ready_event triggered. Sending autoreload_started signal.
+Watching dir C:\Users\kener\FinalProject\Final\management\templates with glob **/*.
+Watching dir C:\Users\kener\FinalProject\Final\account\templates with glob **/*.
+Watching dir C:\Users\kener\FinalProject\Final\locale with glob **/*.mo.
+Watching dir C:\Users\kener\FinalProject\Final\management\locale with glob **/*.mo.
+Watching dir C:\Users\kener\FinalProject\Final\account\locale with glob **/*.mo.
+(0.031) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.016) 
+            SELECT
+                table_name,
+                table_type,
+                table_comment
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            ; args=None; alias=default
+(0.016) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\storage\base.py first seen with mtime 1717169503.6924229
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\http\multipartparser.py first seen with mtime 1717169504.2757583
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loaders\app_directories.py first seen with mtime 1717169504.340961
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\creation.py first seen with mtime 1717169503.8892403
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\wsgi.py first seen with mtime 1717169503.6160457
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\helpers.py first seen with mtime 1717169496.422604
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\templatetags\l10n.py first seen with mtime 1717169504.3935595
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\mime\nonmultipart.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\__init__.py first seen with mtime 1717169504.2995796
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\lzma.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_urls.py first seen with mtime 1717169497.774469
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\paginator.py first seen with mtime 1717169503.609842
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\backends\base.py first seen with mtime 1717169502.4509623
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\validation.py first seen with mtime 1717169503.8326275
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\shortcuts.py first seen with mtime 1717169495.4695244
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\__init__.py first seen with mtime 1717169504.5123692
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\smartif.py first seen with mtime 1717169504.3244307
+File C:\Users\kener\FinalProject\Final\management\admin.py first seen with mtime 1717169822.729869
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sites\__init__.py first seen with mtime 1717169502.9874105
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\wsgiref\simple_server.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\__init__.py first seen with mtime 1717169498.9698966
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\templates.py first seen with mtime 1717169503.6563
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\__init__.py first seen with mtime 1717169495.4663985
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\mail\utils.py first seen with mtime 1717169503.7119746
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\hmac.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\signal.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\json.py first seen with mtime 1717169504.0422246
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\http.py first seen with mtime 1717169504.4741251
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\times.py first seen with mtime 1717169743.408649
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\library.py first seen with mtime 1717169504.316142
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\graphlib.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\operations\models.py first seen with mtime 1717169503.9978247
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\security\sessions.py first seen with mtime 1717169503.6707547
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\random.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\conf\urls\__init__.py first seen with mtime 1717169496.4007788
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\middleware\__init__.py first seen with mtime 1717169504.2819564
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\decorators\debug.py first seen with mtime 1717169504.5300937
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\translation\reloader.py first seen with mtime 1717169504.5052135
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\ast.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\decorators\__init__.py first seen with mtime 1717169504.5227287
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\ddl_references.py first seen with mtime 1717169503.8108206
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\engine\__init__.py first seen with mtime 1717169494.5083826
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\zoneinfo\_tzpath.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\asgiref\sync.py first seen with mtime 1717169495.1098118
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\options.py first seen with mtime 1717169496.4300666
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\backends.py first seen with mtime 1717169498.3340893
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\select.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\mime\multipart.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\sslproto.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\_exceptions.py first seen with mtime 1717169743.391097
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\forms.py first seen with mtime 1717169498.3855686
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\pickle.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\constants.py first seen with mtime 1717169504.009194
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\handlers\asgi.py first seen with mtime 1717169503.7016203
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\dispatch\__init__.py first seen with mtime 1717169504.0866327
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\utils.py first seen with mtime 1717169504.3265016
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\models.py first seen with mtime 1717169498.9832647
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\hashers.py first seen with mtime 1717169498.3876202
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\locks.py first seen with mtime 1717169503.6779318
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\schema.py first seen with mtime 1717169503.8976076
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\__init__.py first seen with mtime 1717169503.5707016
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\backends\django.py first seen with mtime 1717169504.331692
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\_compression.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\widgets.py first seen with mtime 1717169496.4470394
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\related_lookups.py first seen with mtime 1717169504.0525906
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loaders\filesystem.py first seen with mtime 1717169504.3842726
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\exceptions.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\timesince.py first seen with mtime 1717169504.4948106
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\mime\message.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\wsgiref\handlers.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\output.py first seen with mtime 1717169494.5208232
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\html.py first seen with mtime 1717169504.4720998
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_lzma.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\contextvars.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\boundfield.py first seen with mtime 1717169504.093834
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\cache\__init__.py first seen with mtime 1717169503.6191094
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\base_user.py first seen with mtime 1717169498.3351583
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\aggregates.py first seen with mtime 1717169504.0040128
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\engine\statement_splitter.py first seen with mtime 1717169494.5124865
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\related.py first seen with mtime 1717169504.0484667
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\features.py first seen with mtime 1717169503.8913066
+File C:\Users\kener\FinalProject\Final\management\__init__.py first seen with mtime 1717169822.7423177
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\tokens.py first seen with mtime 1717169498.4021769
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\collections\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\management\apps.py first seen with mtime 1717169822.7339878
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\struct.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\log.py first seen with mtime 1717169504.482418
+File C:\Users\kener\FinalProject\Final\Finals\__init__.py first seen with mtime 1717169783.2432091
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\re\_compiler.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\handlers\__init__.py first seen with mtime 1717169503.6995602
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\templatetags\__init__.py first seen with mtime 1717169497.7703416
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\mail\message.py first seen with mtime 1717169503.709906
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\iterators.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\operations\__init__.py first seen with mtime 1717169503.9916482
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\where.py first seen with mtime 1717169504.0845711
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loaders\__init__.py first seen with mtime 1717169504.338891
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\_mysql.cp312-win_amd64.pyd first seen with mtime 1717169743.4004128
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\exceptions.py first seen with mtime 1717169503.9657907
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\decorators.py first seen with mtime 1717169498.3835106
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\views\__init__.py first seen with mtime 1717169497.779655
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\linecache.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\views.py first seen with mtime 1717169503.588169
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\inspect.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\proxy.py first seen with mtime 1717169504.0453625
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\constants.py first seen with mtime 1717169504.0752668
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\messages.py first seen with mtime 1717169503.6511242
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\shutil.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\__init__.py first seen with mtime 1717169504.001948
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\string.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\deconstruct.py first seen with mtime 1717169504.4576802
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\http\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\checks.py first seen with mtime 1717169503.573757
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\introspection.py first seen with mtime 1717169503.8263927
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\hashlib.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\account\__init__.py first seen with mtime 1715781098.1724222
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\handlers\exception.py first seen with mtime 1717169503.7047257
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\templatetags\log.py first seen with mtime 1717169497.7785876
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\utils.py first seen with mtime 1717169503.8139944
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\__init__.py first seen with mtime 1717169503.8149924
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\migration.py first seen with mtime 1717169503.9740548
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\options.py first seen with mtime 1717169504.0257204
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\apps.py first seen with mtime 1717169503.5716994
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\defaults.py first seen with mtime 1717169504.5175543
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_hashlib.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\serializers\base.py first seen with mtime 1717169503.7923186
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\generator.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\window.py first seen with mtime 1717169504.0681193
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\encoding.py first seen with mtime 1717169504.4638627
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\static.py first seen with mtime 1717169504.5206807
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\urllib\response.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\getpass.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\base_session.py first seen with mtime 1717169502.4406872
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\base.py first seen with mtime 1717169503.8181152
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\copy.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\__init__.py first seen with mtime 1717169498.3289618
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\urllib\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\constants\FLAG.py first seen with mtime 1717169743.4191632
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\enum.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\management\templatetags\custom_filters.py first seen with mtime 1717262709.2689173
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\hashable.py first seen with mtime 1717169504.4710515
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\operator.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\middleware\security.py first seen with mtime 1717169504.2974024
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\difflib.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\others.py first seen with mtime 1717169494.5187538
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\views.py first seen with mtime 1717169498.9874554
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\__init__.py first seen with mtime 1717169504.0567183
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\datetime.py first seen with mtime 1717169504.0608582
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\generic\__init__.py first seen with mtime 1717169504.5362613
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\serializers\__init__.py first seen with mtime 1717169503.7902544
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\apps.py first seen with mtime 1717169496.4121659
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\secrets.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\validation.py first seen with mtime 1717169503.8996706
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\deprecation.py first seen with mtime 1717169504.4607432
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\storage\__init__.py first seen with mtime 1717169501.4591813
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\operations\special.py first seen with mtime 1717169503.9998865
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\quopri.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\management\models.py first seen with mtime 1717349162.273929
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\ctypes\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\apps.py first seen with mtime 1717169501.4447732
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loader_tags.py first seen with mtime 1717169504.3203006
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\temp.py first seen with mtime 1717169503.6820412
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\lexer.py first seen with mtime 1717169494.5011086
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\operations\base.py first seen with mtime 1717169503.9937055
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\conf.py first seen with mtime 1717169504.4235468
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\autoreload.py first seen with mtime 1717169504.3006482
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\subprocess.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\servers\__init__.py first seen with mtime 1717169503.8015308
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loaders\cached.py first seen with mtime 1717169504.382201
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\selector_events.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\streams.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\models.py first seen with mtime 1717169502.445812
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\taskgroups.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\expressions.py first seen with mtime 1717169504.0174742
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\apps\__init__.py first seen with mtime 1717169495.472582
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\asgiref\current_thread_executor.py first seen with mtime 1717169495.1015406
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\contextlib.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\textwrap.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\management\commands\__init__.py first seen with mtime 1717169503.742152
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\urllib\error.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\backends\__init__.py first seen with mtime 1717169502.4489024
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\apps\config.py first seen with mtime 1717169495.4736333
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\query_utils.py first seen with mtime 1717169504.0298533
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\checks.py first seen with mtime 1717169496.414215
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\formats.py first seen with mtime 1717169504.4679437
+File C:\Users\kener\FinalProject\Final\account\apps.py first seen with mtime 1715781098.1651514
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\mimetypes.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\finders.py first seen with mtime 1717169503.5758128
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\duration.py first seen with mtime 1717169504.462808
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\mail\__init__.py first seen with mtime 1717169503.7089088
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\__init__.py first seen with mtime 1717169503.6417716
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\contentmanager.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\decorators.py first seen with mtime 1717169496.4152727
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_ctypes.pyd first seen with mtime 1707228654.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\templatetags\cache.py first seen with mtime 1717169504.390492
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sites\shortcuts.py first seen with mtime 1717169503.003902
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\logging\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_socket.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\management\commands\__init__.py first seen with mtime 1717169503.5912714
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\__init__.py first seen with mtime 1717169503.6036642
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\keywords.py first seen with mtime 1717169494.4990487
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\errors.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\wsgiref\util.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\datetime.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\_compat_pickle.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\locale.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\numberformat.py first seen with mtime 1717169504.4865477
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\constants.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\gettext.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_zoneinfo.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\locks.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\middleware.py first seen with mtime 1717169498.3908439
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\tokens.py first seen with mtime 1717169494.505229
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\signals.py first seen with mtime 1717169498.4001234
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\json\encoder.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\unicodedata.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\storage\__init__.py first seen with mtime 1717169503.689309
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\storage\filesystem.py first seen with mtime 1717169503.6934223
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\signing.py first seen with mtime 1717169503.6129003
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\asgiref\__init__.py first seen with mtime 1717169495.0974345
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\backends\base.py first seen with mtime 1717169504.3296287
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\introspection.py first seen with mtime 1717169503.8934026
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\__init__.py first seen with mtime 1717169503.672807
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\templatetags\__init__.py first seen with mtime 1717169504.3884254
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\generic\list.py first seen with mtime 1717169504.5445416
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\debug.py first seen with mtime 1717169504.5154886
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\move.py first seen with mtime 1717169503.6799908
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py first seen with mtime 1717169497.7714024
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\_policybase.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\exceptions.py first seen with mtime 1717169496.4173274
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\signals.py first seen with mtime 1717169504.031919
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\threads.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\cli.py first seen with mtime 1717169494.493834
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\generic\dates.py first seen with mtime 1717169504.5393744
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\decorators\cache.py first seen with mtime 1717169504.5237882
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\sysconfig.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\models.py first seen with mtime 1717169498.394954
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\urls.py first seen with mtime 1717169503.659359
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\translation\trans_real.py first seen with mtime 1717169504.5103228
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\gzip.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\calendar.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\account\admin.py first seen with mtime 1715781098.1609197
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\constants.py first seen with mtime 1717169501.447837
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\storage\handler.py first seen with mtime 1717169503.6944795
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\queues.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\__init__.py first seen with mtime 1717169502.4354882
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\header.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\__init__.py first seen with mtime 1717169496.4070399
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\converters.py first seen with mtime 1717169743.4035418
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\_markupbase.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\management\__init__.py first seen with mtime 1717169503.5892181
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\backends\__init__.py first seen with mtime 1717169504.3275642
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\widgets.py first seen with mtime 1717169504.1093535
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\formatter.py first seen with mtime 1717169494.4969537
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\ipv6.py first seen with mtime 1717169504.4762
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\checks.py first seen with mtime 1717169498.976085
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\datastructures.py first seen with mtime 1717169504.4494445
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py first seen with mtime 1717169504.3026898
+File C:\Users\kener\FinalProject\Final\Finals\urls.py first seen with mtime 1717176442.901343
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\pathlib.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\text.py first seen with mtime 1717169504.0660555
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\admin.py first seen with mtime 1717169498.3310254
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\models.py first seen with mtime 1717169504.103156
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\fnmatch.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\utils.py first seen with mtime 1717169503.5861063
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\asgiref\local.py first seen with mtime 1717169495.1036327
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\timezone.py first seen with mtime 1717169504.4969554
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\operations\fields.py first seen with mtime 1717169503.995765
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\re\_parser.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\http\request.py first seen with mtime 1717169504.2778182
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\base.py first seen with mtime 1717169503.8418734
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\operations.py first seen with mtime 1717169503.8955429
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\numbers.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\encodings\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\management\templatetags\_init_.py first seen with mtime 1717262625.2909784
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_modify.py first seen with mtime 1717169497.7734704
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\nturl2path.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\warnings.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\cache\backends\base.py first seen with mtime 1717169503.6263206
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\__init__.py first seen with mtime 1717169501.4416363
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\templatetags\tz.py first seen with mtime 1717169504.3976862
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\token.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\selectors.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\choices.py first seen with mtime 1717169504.4452877
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\collections\abc.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\quoprimime.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\validators.py first seen with mtime 1717169503.6149879
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_asyncio.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\utils.py first seen with mtime 1717169503.8077586
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\compatibility\django_4_0.py first seen with mtime 1717169503.6635306
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_bz2.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\management\base.py first seen with mtime 1717169503.7327342
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\itercompat.py first seen with mtime 1717169504.4782498
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\utils.py first seen with mtime 1717169501.4560657
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\schema.py first seen with mtime 1717169503.8305643
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\logging\handlers.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_uuid.pyd first seen with mtime 1707228650.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\apps.py first seen with mtime 1717169498.9750202
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\html\entities.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\keyword.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\staggered.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\fields.py first seen with mtime 1717169498.9791389
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\renderers.py first seen with mtime 1717169504.10522
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\copyreg.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\charset.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\__init__.py first seen with mtime 1717169504.0917666
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\tempfile.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\storage\memory.py first seen with mtime 1717169503.6965153
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\middleware\csrf.py first seen with mtime 1717169504.290178
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\urllib\parse.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\utils.py first seen with mtime 1717169504.032988
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\base64.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\reprlib.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\regex_helper.py first seen with mtime 1717169504.4876018
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\constants\__init__.py first seen with mtime 1717169743.421224
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\enums.py first seen with mtime 1717169504.0153852
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\decorators.py first seen with mtime 1717169504.4597442
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\coroutines.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\database.py first seen with mtime 1717169503.6469808
+File C:\Users\kener\FinalProject\Final\account\views.py first seen with mtime 1717176399.943057
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\dateparse.py first seen with mtime 1717169504.453575
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\handlers.py first seen with mtime 1717169503.5778646
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\conf\locale\__init__.py first seen with mtime 1717169495.4932976
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\query.py first seen with mtime 1717169504.0277896
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\signals.py first seen with mtime 1717169503.8118744
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\log.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\actions.py first seen with mtime 1717169496.411166
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\management\__init__.py first seen with mtime 1717169503.7306867
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\ssl.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\views\autocomplete.py first seen with mtime 1717169497.7806523
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\module_loading.py first seen with mtime 1717169504.4855504
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\utils.py first seen with mtime 1717169503.9875183
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\lookups.py first seen with mtime 1717169504.021592
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\decorators\csrf.py first seen with mtime 1717169504.5290406
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\functools.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\http\client.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\wsgiref\headers.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\utils.py first seen with mtime 1717169496.4427142
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\exceptions.py first seen with mtime 1717169504.4276822
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\uploadedfile.py first seen with mtime 1717169503.6840913
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\right_margin.py first seen with mtime 1717169494.5249374
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\state.py first seen with mtime 1717169503.9854333
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\encoders.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\creation.py first seen with mtime 1717169503.8222396
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\generic\edit.py first seen with mtime 1717169504.543543
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\platform.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\engine\filter_stack.py first seen with mtime 1717169494.510438
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\ipaddress.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\weakref.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\mime\base.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\templatetags\static.py first seen with mtime 1717169504.3956244
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1252.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\middleware.py first seen with mtime 1717169502.4437509
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\security\csrf.py first seen with mtime 1717169503.6687057
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\indexes.py first seen with mtime 1717169504.0195365
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\i18n.py first seen with mtime 1717169504.5196297
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\exceptions.py first seen with mtime 1717169503.6077857
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\query.py first seen with mtime 1717169504.080453
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\http\response.py first seen with mtime 1717169504.2798874
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\types.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\_os.py first seen with mtime 1717169504.4349587
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\signals.py first seen with mtime 1717169503.61084
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\encodings\utf_8.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\resolvers.py first seen with mtime 1717169504.4297454
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\socket.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\mixins.py first seen with mtime 1717169504.0432975
+File C:\Users\kener\FinalProject\Final\account\models.py first seen with mtime 1715781098.1672602
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\tokens.py first seen with mtime 1717169494.5259356
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\management\color.py first seen with mtime 1717169503.733787
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\html\parser.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\dateformat.py first seen with mtime 1717169504.451515
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\constants\CLIENT.py first seen with mtime 1717169743.4107003
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\security\base.py first seen with mtime 1717169503.6676524
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\utils.py first seen with mtime 1717169494.5062752
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\filters.py first seen with mtime 1717169496.418389
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\lorem_ipsum.py first seen with mtime 1717169504.483481
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\trsock.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\client.py first seen with mtime 1717169503.8201637
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\socketserver.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\utils.py first seen with mtime 1717169504.1072848
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\parser.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\protocols.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\exceptions.py first seen with mtime 1717169504.315144
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\bz2.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\transaction.py first seen with mtime 1717169503.8067012
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\fields.py first seen with mtime 1717169504.0969584
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_subprocess.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\management\__init__.py first seen with mtime 1717169498.9285593
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\aligned_indent.py first seen with mtime 1717169494.516694
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\sql.py first seen with mtime 1717169494.503166
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\reverse_related.py first seen with mtime 1717169504.0546563
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\__init__.py first seen with mtime 1717169503.9615996
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\http\server.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\management\views.py first seen with mtime 1717422712.1446755
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\datastructures.py first seen with mtime 1717169504.0773234
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\zoneinfo\_common.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_wmi.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\wsgiref\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\pkgutil.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\forms.py first seen with mtime 1717169504.097958
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\decorators\common.py first seen with mtime 1717169504.5268955
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\__init__.py first seen with mtime 1717169504.0711582
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\heapq.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\encodings\aliases.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\bisect.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\release.py first seen with mtime 1717169743.4065979
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\middleware\cache.py first seen with mtime 1717169504.2840195
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\asyncio.py first seen with mtime 1717169504.4390922
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\password_validation.py first seen with mtime 1717169498.398069
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\transports.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\base64mime.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\futures.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_tasks.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\constants\FIELD_TYPE.py first seen with mtime 1717169743.4181635
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\format_helpers.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\http\cookie.py first seen with mtime 1717169504.2736933
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\utils.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\importlib\_abc.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\translation.py first seen with mtime 1717169503.6572993
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\feedparser.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\context.py first seen with mtime 1717169504.304755
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\models.py first seen with mtime 1717169496.423629
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\files.py first seen with mtime 1717169504.0381074
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\__init__.py first seen with mtime 1717169494.4907234
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\apps.py first seen with mtime 1717169498.3320239
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\response.py first seen with mtime 1717169504.3223672
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\validators.py first seen with mtime 1717169498.4052813
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\base.py first seen with mtime 1717169504.007129
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\urllib\request.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\admin.py first seen with mtime 1717169498.9729524
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\cache.py first seen with mtime 1717169504.443225
+File C:\Users\kener\FinalProject\Final\account\urls.py first seen with mtime 1715788962.7354333
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\operations.py first seen with mtime 1717169503.8284616
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\base.py first seen with mtime 1717169504.4214842
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\_virtualenv.py first seen with mtime 1717169128.0833652
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\constraints.py first seen with mtime 1717169504.0112522
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\manager.py first seen with mtime 1717169504.0236506
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\mime\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\management\commands\runserver.py first seen with mtime 1717169503.7685435
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\apps\registry.py first seen with mtime 1717169495.4756942
+File C:\Users\kener\FinalProject\Final\Finals\settings.py first seen with mtime 1717422510.9157174
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\registry.py first seen with mtime 1717169503.654246
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\safestring.py first seen with mtime 1717169504.4896505
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\__init__.py first seen with mtime 1717169503.8046527
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\html\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\files.py first seen with mtime 1717169503.6490571
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\images.py first seen with mtime 1717169503.6769328
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\pprint.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loaders\base.py first seen with mtime 1717169504.3800611
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\subqueries.py first seen with mtime 1717169504.0825105
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\_encoded_words.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\__init__.py first seen with mtime 1717169494.515559
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\termcolors.py first seen with mtime 1717169504.4916961
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\dispatch\dispatcher.py first seen with mtime 1717169504.0886998
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\apps.py first seen with mtime 1717169502.4386234
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\policy.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\exceptions.py first seen with mtime 1717169494.494888
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_decimal.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\defaulttags.py first seen with mtime 1717169504.3109636
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\re\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\mixins.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\base\features.py first seen with mtime 1717169503.8242736
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\engine\grouping.py first seen with mtime 1717169494.511438
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\functional.py first seen with mtime 1717169504.469003
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\__future__.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\crypto.py first seen with mtime 1717169504.4483964
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\servers\basehttp.py first seen with mtime 1717169503.803598
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\generic\detail.py first seen with mtime 1717169504.5414274
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\mixins.py first seen with mtime 1717169504.0649962
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\opcode.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\threading.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\management\__init__.py first seen with mtime 1717169499.5188007
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\loader.py first seen with mtime 1717169504.3182323
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\caches.py first seen with mtime 1717169503.6459155
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\templatetags\base.py first seen with mtime 1717169497.7765174
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sites\requests.py first seen with mtime 1717169503.0018487
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\ctypes\_endian.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\version.py first seen with mtime 1717169504.5010624
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\checks.py first seen with mtime 1717169498.3371973
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\json\scanner.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\client.py first seen with mtime 1717169503.842938
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\subprocess.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\converters.py first seen with mtime 1717169504.4256146
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\http\cookies.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\management\commands\runserver.py first seen with mtime 1717169503.5963905
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\sqlparse\filters\reindent.py first seen with mtime 1717169494.5228777
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py first seen with mtime 1717169504.050526
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\conf\__init__.py first seen with mtime 1717169495.4777565
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\__init__.py first seen with mtime 1717169503.8398046
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\traceback.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\storage\base.py first seen with mtime 1717169501.4613645
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\compatibility\__init__.py first seen with mtime 1717169503.6614697
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\argparse.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\inspect.py first seen with mtime 1717169504.4751506
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_utils.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\storage\mixins.py first seen with mtime 1717169503.6985612
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\__init__.py first seen with mtime 1717169503.8087568
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\tree.py first seen with mtime 1717169504.4990156
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\utils.py first seen with mtime 1717169503.6872406
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\handlers\base.py first seen with mtime 1717169503.7036788
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\autoreload.py first seen with mtime 1717169504.4411533
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\_parseaddr.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\_header_value_parser.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\forms\formsets.py first seen with mtime 1717169504.1000211
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\generated.py first seen with mtime 1717169504.0401714
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\cache\utils.py first seen with mtime 1717169503.6211672
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\base.py first seen with mtime 1717169503.673806
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_overlapped.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\decimal.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\__init__.py first seen with mtime 1717169496.4091053
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\utils.py first seen with mtime 1717169504.4307444
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\_weakrefset.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\message.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\logging\config.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\comparison.py first seen with mtime 1717169504.058784
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\http\__init__.py first seen with mtime 1717169504.2716286
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\text.py first seen with mtime 1717169504.4937603
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\translation\__init__.py first seen with mtime 1717169504.5041642
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\security\__init__.py first seen with mtime 1717169503.6655893
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\deletion.py first seen with mtime 1717169504.0133197
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\__init__.py first seen with mtime 1717169504.4328568
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\serializers\python.py first seen with mtime 1717169503.7964332
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_queue.pyd first seen with mtime 1707228650.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\queue.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\engine.py first seen with mtime 1717169504.3130257
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\sites.py first seen with mtime 1717169496.434162
+File C:\Users\kener\FinalProject\Final\management\urls.py first seen with mtime 1717422044.336082
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\model_checks.py first seen with mtime 1717169503.6531937
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\tokenize.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\checks\async_checks.py first seen with mtime 1717169503.64283
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\defaultfilters.py first seen with mtime 1717169504.308887
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\fields\__init__.py first seen with mtime 1717169504.0360465
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\conf\global_settings.py first seen with mtime 1717169495.4798195
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\files\uploadhandler.py first seen with mtime 1717169503.685153
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\typing.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\uuid.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\__init__.py first seen with mtime 1717169743.387978
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\ctypes\wintypes.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\mime\text.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\cache\backends\filebased.py first seen with mtime 1717169503.6335173
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\forms.py first seen with mtime 1717169498.9812024
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\serializers\json.py first seen with mtime 1717169503.79435
+File C:\Users\kener\FinalProject\Final\manage.py first seen with mtime 1717169783.231778
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\api.py first seen with mtime 1717169501.442635
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\re\_casefix.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\connection.py first seen with mtime 1717169504.4463422
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\zoneinfo\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\email\headerregistry.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\urls\__init__.py first seen with mtime 1717169504.4194238
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_futures.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\templatetags\i18n.py first seen with mtime 1717169504.3914895
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\concurrent\__init__.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\DLLs\_ssl.pyd first seen with mtime 1707228652.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\functions\math.py first seen with mtime 1717169504.0629258
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\generic\base.py first seen with mtime 1717169504.5383115
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\glob.py first seen with mtime 1707228618.0
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\dis.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\cache\backends\__init__.py first seen with mtime 1717169503.623228
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\utils\dates.py first seen with mtime 1717169504.4566114
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\handlers\wsgi.py first seen with mtime 1717169503.7057757
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\re\_constants.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\views\main.py first seen with mtime 1717169497.7848752
+File C:\Users\kener\FinalProject\Final\management\templates\assign.html first seen with mtime 1717383256.386811
+File C:\Users\kener\FinalProject\Final\management\templates\dashboard.html first seen with mtime 1717383675.0893888
+File C:\Users\kener\FinalProject\Final\management\templates\driver_form.html first seen with mtime 1717301729.6854177
+File C:\Users\kener\FinalProject\Final\management\templates\driver_list.html first seen with mtime 1717420956.9738362
+File C:\Users\kener\FinalProject\Final\management\templates\index.html first seen with mtime 1717422044.1000192
+File C:\Users\kener\FinalProject\Final\management\templates\log_report.html first seen with mtime 1717421911.6691403
+File C:\Users\kener\FinalProject\Final\management\templates\manage_maintenance.html first seen with mtime 1717349657.7854602
+File C:\Users\kener\FinalProject\Final\management\templates\remittance.html first seen with mtime 1717405972.998924
+File C:\Users\kener\FinalProject\Final\management\templates\structure first seen with mtime 1717418675.5544164
+File C:\Users\kener\FinalProject\Final\management\templates\unit_form.html first seen with mtime 1717276564.678602
+File C:\Users\kener\FinalProject\Final\management\templates\unit_list.html first seen with mtime 1717265834.3974068
+File C:\Users\kener\FinalProject\Final\management\templates\structure\nav.html first seen with mtime 1717418675.5513446
+File C:\Users\kener\FinalProject\Final\account\templates\login.html first seen with mtime 1717384030.0395248
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0002_alter_permission_name_max_length.py first seen with mtime 1717169498.9389071
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0003_alter_user_email_max_length.py first seen with mtime 1717169498.9419706
+File C:\Users\kener\FinalProject\Final\management\migrations\0007_alter_driver_driver_pd_alter_driver_id_driver.py first seen with mtime 1717300267.2832916
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\migrations\0001_initial.py first seen with mtime 1717169502.9739437
+File C:\Users\kener\FinalProject\Final\management\migrations\0011_alter_unit_driver.py first seen with mtime 1717345275.42052
+File C:\Users\kener\FinalProject\Final\management\migrations\0001_initial.py first seen with mtime 1717176132.762426
+File C:\Users\kener\FinalProject\Final\management\migrations\0002_remove_driver_damage_part_remove_driver_status_and_more.py first seen with mtime 1717258610.8267787
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0004_alter_user_username_opts.py first seen with mtime 1717169498.9440403
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\migrations\__init__.py first seen with mtime 1717169499.527077
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\executor.py first seen with mtime 1717169503.9678566
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\core\cache\backends\locmem.py first seen with mtime 1717169503.6355777
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0009_alter_user_last_name_max_length.py first seen with mtime 1717169498.953348
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\loader.py first seen with mtime 1717169503.9729762
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\migrations\__init__.py first seen with mtime 1717169497.4557412
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\models\sql\compiler.py first seen with mtime 1717169504.0742166
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\encodings\idna.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\migrations\0001_initial.py first seen with mtime 1717169499.5239604
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\connections.py first seen with mtime 1717169743.4024777
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0011_update_proxy_permissions.py first seen with mtime 1717169498.9574852
+File C:\Users\kener\FinalProject\Final\account\migrations\__init__.py first seen with mtime 1715781098.1755006
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\migrations\0001_initial.py first seen with mtime 1717169497.450572
+File C:\Users\kener\AppData\Local\Programs\Python\Python312\Lib\stringprep.py first seen with mtime 1707228618.0
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0006_require_contenttypes_0002.py first seen with mtime 1717169498.9481583
+File C:\Users\kener\FinalProject\Final\management\migrations\0004_alter_unit_driver_alter_unit_status_and_more.py first seen with mtime 1717298566.8102548
+File C:\Users\kener\FinalProject\Final\management\migrations\0003_damagepart_remove_unit_damage_part_alter_unit_status_and_more.py first seen with mtime 1717265442.3256068
+File C:\Users\kener\FinalProject\Final\management\migrations\0006_driver_driver_pd_driver_id_driver.py first seen with mtime 1717300225.8045192
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\exceptions.py first seen with mtime 1717169502.4427524
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\recorder.py first seen with mtime 1717169503.981299
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0007_alter_validators_add_error_messages.py first seen with mtime 1717169498.9502196
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\__init__.py first seen with mtime 1717169498.9605484
+File C:\Users\kener\FinalProject\Final\management\migrations\0005_remove_driver_dept_remove_driver_driver_pd_and_more.py first seen with mtime 1717299458.5814288
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\MySQLdb\cursors.py first seen with mtime 1717169743.405599
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0001_initial.py first seen with mtime 1717169498.9368443
+File C:\Users\kener\FinalProject\Final\management\migrations\0010_alter_unit_driver_alter_unit_status_and_more.py first seen with mtime 1717332421.4924853
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0005_alter_user_last_login_null.py first seen with mtime 1717169498.9461024
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\contenttypes\migrations\0002_remove_content_type_name.py first seen with mtime 1717169499.5260775
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\backends\db.py first seen with mtime 1717169502.4571729
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\migrations\0002_logentry_remove_auto_add.py first seen with mtime 1717169497.4526248
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0012_alter_user_first_name_max_length.py first seen with mtime 1717169498.9595509
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\middleware\clickjacking.py first seen with mtime 1717169504.2850173
+File C:\Users\kener\FinalProject\Final\Finals\wsgi.py first seen with mtime 1717169783.2422116
+File C:\Users\kener\FinalProject\Final\management\migrations\__init__.py first seen with mtime 1717169822.7454152
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\migrations\__init__.py first seen with mtime 1717169502.9760067
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0010_alter_group_name_max_length.py first seen with mtime 1717169498.955408
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\backends\mysql\compiler.py first seen with mtime 1717169503.8450031
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\middleware\common.py first seen with mtime 1717169504.2870853
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\middleware.py first seen with mtime 1717169501.4530025
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\admin\migrations\0003_logentry_add_action_flag_choices.py first seen with mtime 1717169497.4546835
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\views\csrf.py first seen with mtime 1717169504.514428
+File C:\Users\kener\FinalProject\Final\management\migrations\0009_alter_unit_status_alter_unit_unit_made.py first seen with mtime 1717324144.5872207
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\db\migrations\graph.py first seen with mtime 1717169503.9699235
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\migrations\0008_alter_user_username_max_length.py first seen with mtime 1717169498.952282
+File C:\Users\kener\FinalProject\Final\management\migrations\0008_driver_dept_driver_savings.py first seen with mtime 1717301279.8544154
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\storage\cookie.py first seen with mtime 1717169501.464426
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\storage\fallback.py first seen with mtime 1717169501.465491
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\storage\session.py first seen with mtime 1717169501.467577
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\sessions\serializers.py first seen with mtime 1717169502.4478552
+Exception while resolving variable 'error_message' in template 'login.html'.
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 875, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\context.py", line 83, in __getitem__
+    raise KeyError(key)
+KeyError: 'error_message'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 881, in _resolve_lookup
+    if isinstance(current, BaseContext) and getattr(
+                                            ^^^^^^^^
+AttributeError: type object 'RequestContext' has no attribute 'error_message'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 891, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'error_message'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 898, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [error_message] in [{'True': True, 'False': False, 'None': None}, {'csrf_token': <SimpleLazyObject: 'yojXdEsfKfFqVcn5s6cjfqKDw9bpuUSB2wDlKWaI7FRhq05JC5AARcFqCWhSRNrC'>, 'request': <WSGIRequest: GET '/'>, 'user': <SimpleLazyObject: <function AuthenticationMiddleware.process_request.<locals>.<lambda> at 0x0000020AB2675D00>>, 'perms': PermWrapper(<SimpleLazyObject: <function AuthenticationMiddleware.process_request.<locals>.<lambda> at 0x0000020AB2675D00>>), 'messages': <FallbackStorage: request=<WSGIRequest: GET '/'>>, 'DEFAULT_MESSAGE_LEVELS': {'DEBUG': 10, 'INFO': 20, 'SUCCESS': 25, 'WARNING': 30, 'ERROR': 40}}, {}]
+"GET / HTTP/1.1" 200 1552
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\auth\context_processors.py first seen with mtime 1717169498.3413186
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\messages\context_processors.py first seen with mtime 1717169501.449892
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\context_processors.py first seen with mtime 1717169504.3068268
+(0.000) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.032) SELECT `auth_user`.`id`, `auth_user`.`password`, `auth_user`.`last_login`, `auth_user`.`is_superuser`, `auth_user`.`username`, `auth_user`.`first_name`, `auth_user`.`last_name`, `auth_user`.`email`, `auth_user`.`is_staff`, `auth_user`.`is_active`, `auth_user`.`date_joined` FROM `auth_user` WHERE `auth_user`.`username` = 'keneth' LIMIT 21; args=('keneth',); alias=default
+(0.016) SELECT `django_session`.`session_key`, `django_session`.`session_data`, `django_session`.`expire_date` FROM `django_session` WHERE (`django_session`.`expire_date` > '2024-06-03 13:52:32.010994' AND `django_session`.`session_key` = '2iilkn9i87cxq0c15ki79x89rl0ek7b9') LIMIT 21; args=('2024-06-03 13:52:32.010994', '2iilkn9i87cxq0c15ki79x89rl0ek7b9'); alias=default
+(0.031) UPDATE `auth_user` SET `last_login` = '2024-06-03 13:52:32.023222' WHERE `auth_user`.`id` = 1; args=('2024-06-03 13:52:32.023222', 1); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.016) UPDATE `django_session` SET `session_data` = '.eJxVjMEOwiAQBf-FsyFAYSkevfcbyMKCVA0kpT0Z_9026UGvb2bem3nc1uK3nhY_E7syyS6_W8D4TPUA9MB6bzy2ui5z4IfCT9r51Ci9bqf7d1Cwl71WzqABrUYVB5kFSLLBBJfBkBBWBU0656STRRdEgt0bpM1DFGBGoAzs8wXGOTdK:1sE86y:isDveLLTvorsv2aBudEaX8BAG3590zZeB5zuvU3d0nc', `expire_date` = '2024-06-17 13:52:32.063183' WHERE `django_session`.`session_key` = '2iilkn9i87cxq0c15ki79x89rl0ek7b9'; args=('.eJxVjMEOwiAQBf-FsyFAYSkevfcbyMKCVA0kpT0Z_9026UGvb2bem3nc1uK3nhY_E7syyS6_W8D4TPUA9MB6bzy2ui5z4IfCT9r51Ci9bqf7d1Cwl71WzqABrUYVB5kFSLLBBJfBkBBWBU0656STRRdEgt0bpM1DFGBGoAzs8wXGOTdK:1sE86y:isDveLLTvorsv2aBudEaX8BAG3590zZeB5zuvU3d0nc', '2024-06-17 13:52:32.063183', '2iilkn9i87cxq0c15ki79x89rl0ek7b9'); alias=default
+(0.000) COMMIT; args=None; alias=default
+"POST / HTTP/1.1" 302 0
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.000) SELECT `django_session`.`session_key`, `django_session`.`session_data`, `django_session`.`expire_date` FROM `django_session` WHERE (`django_session`.`expire_date` > '2024-06-03 13:52:32.126002' AND `django_session`.`session_key` = '2iilkn9i87cxq0c15ki79x89rl0ek7b9') LIMIT 21; args=('2024-06-03 13:52:32.126002', '2iilkn9i87cxq0c15ki79x89rl0ek7b9'); alias=default
+(0.000) SELECT `auth_user`.`id`, `auth_user`.`password`, `auth_user`.`last_login`, `auth_user`.`is_superuser`, `auth_user`.`username`, `auth_user`.`first_name`, `auth_user`.`last_name`, `auth_user`.`email`, `auth_user`.`is_staff`, `auth_user`.`is_active`, `auth_user`.`date_joined` FROM `auth_user` WHERE `auth_user`.`id` = 1 LIMIT 21; args=(1,); alias=default
+Exception while resolving variable 'units_with_drivers' in template 'index.html'.
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 875, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\context.py", line 83, in __getitem__
+    raise KeyError(key)
+KeyError: 'units_with_drivers'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 881, in _resolve_lookup
+    if isinstance(current, BaseContext) and getattr(
+                                            ^^^^^^^^
+AttributeError: type object 'RequestContext' has no attribute 'units_with_drivers'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 891, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'units_with_drivers'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\template\base.py", line 898, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [units_with_drivers] in [{'True': True, 'False': False, 'None': None}, {'csrf_token': <SimpleLazyObject: <function csrf.<locals>._get_val at 0x0000020AB2676160>>, 'request': <WSGIRequest: GET '/home/'>, 'user': <SimpleLazyObject: <User: keneth>>, 'perms': PermWrapper(<SimpleLazyObject: <User: keneth>>), 'messages': <FallbackStorage: request=<WSGIRequest: GET '/home/'>>, 'DEFAULT_MESSAGE_LEVELS': {'DEBUG': 10, 'INFO': 20, 'SUCCESS': 25, 'WARNING': 30, 'ERROR': 40}}, {}, {}]
+"GET /home/ HTTP/1.1" 200 4883
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\contrib\staticfiles\storage.py first seen with mtime 1717169503.579927
+"GET /management/log_report/ HTTP/1.1" 200 110387
+(0.000) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.016) SELECT `management_driver`.`id`, `management_driver`.`driver_PD`, `management_driver`.`id_driver`, `management_driver`.`driver_name`, `management_driver`.`savings`, `management_driver`.`dept` FROM `management_driver`; args=(); alias=default
+"GET /management/drivers/list/ HTTP/1.1" 200 6084
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\conf\locale\en\formats.py first seen with mtime 1717169495.6403654
+File C:\Users\kener\FinalProject\Final\.venv\Lib\site-packages\django\conf\locale\en\__init__.py first seen with mtime 1717169495.6383102
+(0.000) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.000) SELECT `management_driver`.`id`, `management_driver`.`driver_PD`, `management_driver`.`id_driver`, `management_driver`.`driver_name`, `management_driver`.`savings`, `management_driver`.`dept` FROM `management_driver` WHERE `management_driver`.`id` = 9 LIMIT 21; args=(9,); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.000) UPDATE `management_unit` SET `driver_id` = NULL WHERE `management_unit`.`driver_id` IN (9); args=(9,); alias=default
+(0.000) DELETE FROM `management_driver` WHERE `management_driver`.`id` IN (9); args=(9,); alias=default
+(0.016) COMMIT; args=None; alias=default
+"POST /management/drivers/9/delete/ HTTP/1.1" 302 0
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.000) SELECT `management_driver`.`id`, `management_driver`.`driver_PD`, `management_driver`.`id_driver`, `management_driver`.`driver_name`, `management_driver`.`savings`, `management_driver`.`dept` FROM `management_driver`; args=(); alias=default
+"GET /management/drivers/list/ HTTP/1.1" 200 3992
+(0.000) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.000) SELECT `management_driver`.`id`, `management_driver`.`driver_PD`, `management_driver`.`id_driver`, `management_driver`.`driver_name`, `management_driver`.`savings`, `management_driver`.`dept` FROM `management_driver`; args=(); alias=default
+"GET /management/drivers/list/ HTTP/1.1" 200 3992
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.000) SELECT `management_driver`.`id`, `management_driver`.`driver_PD`, `management_driver`.`id_driver`, `management_driver`.`driver_name`, `management_driver`.`savings`, `management_driver`.`dept` FROM `management_driver`; args=(); alias=default
+"GET /management/drivers/list/ HTTP/1.1" 200 3992
+File C:\Users\kener\FinalProject\Final\management\templates\structure previous mtime: 1717418675.5544164, current mtime: 1717422896.5928628
+C:\Users\kener\FinalProject\Final\management\templates\structure notified as changed. Signal results: [(<function template_changed at 0x0000020AB0ECC9A0>, True), (<function translation_file_changed at 0x0000020AB205ECA0>, None)].
+File C:\Users\kener\FinalProject\Final\management\templates\structure\nav.html previous mtime: 1717418675.5513446, current mtime: 1717422896.5890665
+C:\Users\kener\FinalProject\Final\management\templates\structure\nav.html notified as changed. Signal results: [(<function template_changed at 0x0000020AB0ECC9A0>, True), (<function translation_file_changed at 0x0000020AB205ECA0>, None)].
+(0.031) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.016) SELECT `management_driver`.`id`, `management_driver`.`driver_PD`, `management_driver`.`id_driver`, `management_driver`.`driver_name`, `management_driver`.`savings`, `management_driver`.`dept` FROM `management_driver`; args=(); alias=default
+"GET /management/drivers/list/ HTTP/1.1" 200 4014
+"GET /management/log_report/ HTTP/1.1" 200 117076
+File C:\Users\kener\FinalProject\Final\management\views.py previous mtime: 1717422712.1446755, current mtime: 1717423060.0717819
+C:\Users\kener\FinalProject\Final\management\views.py notified as changed. Signal results: [(<function template_changed at 0x0000020AB0ECC9A0>, None), (<function translation_file_changed at 0x0000020AB205ECA0>, None)].
+C:\Users\kener\FinalProject\Final\management\views.py changed, reloading.

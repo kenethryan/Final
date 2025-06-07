@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Accounts</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .container-fluid {
+            padding: 20px;
+        }
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .modal-content {
+            border-radius: 8px;
+        }
+        .badge {
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .table-custom {
+            background-color: #1B3B48;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table-custom thead {
+            background-color: #2D4D5A;
+            color: #3D9DB3;
+        }
+        .table-custom th,
+        .table-custom td {
+            border-color: #2D4D5A !important;
+            padding: 15px;
+        }
+        .status-badge {
+            background-color: #3D9DB3;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+        
+        .pagination .page-link {
+            color: black;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+        
+        .text-success, .text-danger, .text-warning, .text-info {
+            color: black !important;
+        }
+    </style>
+</head>
+<body>
+    {% include 'structure/nav.html' %}
+
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">User Accounts</h1>
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary text-dark" data-bs-toggle="modal" data-bs-target="#unitOverviewModal">
+                    <i class="fas fa-truck me-2"></i>Unit Overview
+                </button>
+                <button type="button" class="btn btn-secondary text-dark" data-bs-toggle="modal" data-bs-target="#driverOverviewModal">
+                    <i class="fas fa-users me-2"></i>Driver Overview
+                </button>
+                <button type="button" class="btn btn-secondary text-dark" data-bs-toggle="modal" data-bs-target="#userHistoryModal">
+                    <i class="fas fa-history me-2"></i>Activity Logs
+                </button>
+                <button type="button" class="btn btn-secondary text-dark" data-bs-toggle="modal" data-bs-target="#dashboardModal">
+                    <i class="fas fa-chart-line me-2"></i>Payment Amount
+                </button>
+            </div>
+        </div>
+
+        <!-- Unit Overview Modal -->
+        <div class="modal fade" id="unitOverviewModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title text-dark">Unit Overview</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-custom">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="stats-badges">
+                                    <span class="badge bg-light me-2 text-dark border border-secondary">
+                                        Active Units: {{ active_units }}
+                                    </span>
+                                    <span class="badge bg-light me-2 text-dark border border-secondary">
+                                        On Board: {{ on_board_units }}
+                                    </span>
+                                    <span class="badge bg-dark me-2 text-light">
+                                        Under Maintenance: {{ maintenance_units }}
+                                    </span>
+                                    <span class="badge bg-dark text-light">
+                                        Out of Service: {{ out_of_service_units }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <table class="table table-hover mb-0 text-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Unit PO</th>
+                                        <th>Driver</th>
+                                        <th>Status</th>
+                                        <th>Made Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for unit in units %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar me-2">
+                                                    <i class="fas fa-truck fa-2x text-primary"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">{{ unit.unit_PO }}</div>
+                                                    <div class="text-muted small">ID: {{ unit.flespi_device_id|default:"-" }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ unit.driver.driver_name|default:"-" }}</td>
+                                        <td>
+                                            <span class="status-badge 
+                                                {% if unit.status == 'in_use' %}bg-light text-dark border border-secondary
+                                                {% elif unit.status == 'stand_by' %}bg-light text-dark border border-secondary
+                                                {% elif unit.status == 'under_maintenance' %}bg-dark text-light
+                                                {% elif unit.status == 'out_of_service' %}bg-dark text-light
+                                                {% else %}bg-light text-dark{% endif %}">
+                                                {{ unit.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ unit.unit_made|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <i class="bi bi-emoji-frown fs-4 d-block mb-2"></i>
+                                            No units found
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Unit Overview Pagination -->
+                        <div class="mt-4">
+                            <nav aria-label="Unit Overview pagination">
+                                <ul class="pagination justify-content-center">
+                                    {% if units.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link text-dark" href="#" data-page="{{ units.previous_page_number }}">Previous</a>
+                                    </li>
+                                    {% endif %}
+
+                                    {% with ''|center:units.paginator.num_pages as range %}
+                                    {% for _ in range %}
+                                        {% with forloop.counter as num %}
+                                            {% if num > units.number|add:"-3" and num < units.number|add:"3" %}
+                                            <li class="page-item {% if num == units.number %}active{% endif %}">
+                                                <a class="page-link text-dark" href="#" data-page="{{ num }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                    {% endwith %}
+
+                                    {% if units.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link text-dark" href="#" data-page="{{ units.next_page_number }}">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Overview Modal -->
+        <div class="modal fade" id="driverOverviewModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title text-dark">Driver Overview</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-custom">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="stats-badges">
+                                    <span class="badge bg-light me-2 text-dark border border-secondary">
+                                        Active Drivers: {{ active_drivers }}
+                                    </span>
+                                    <span class="badge bg-dark me-2 text-light">
+                                        Total Extra Fund: ₱{{ total_savings|floatformat:2 }}
+                                    </span>
+                                    <span class="badge bg-dark text-light">
+                                        Total Rental Balance: ₱{{ total_debt|floatformat:2 }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Driver</th>
+                                        <th>Contact</th>
+                                        <th>Status</th>
+                                        <th>Status Badge</th>
+                                        <th>Extra Fund</th>
+                                        <th>Rental Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for driver in drivers %}
+                                    <tr{% if driver.id in delinquent_driver_ids %} class="table-danger delinquent-row"{% endif %}>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar me-2">
+                                                    {% if driver.profile_picture %}
+                                                    <img src="{{ driver.profile_picture.url }}"
+                                                         class="rounded-circle"
+                                                         width="40"
+                                                         height="40"
+                                                         alt="{{ driver.driver_name }}">
+                                                    {% else %}
+                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                                                         style="width: 40px; height: 40px;">
+                                                        <i class="bi bi-person"></i>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">{{ driver.driver_name }}{% if driver.id in delinquent_driver_ids %} <span class="text-danger ms-1" title="Delinquent"><i class="fas fa-exclamation-triangle"></i></span>{% endif %}</div>
+                                                    <div class="text-muted small">ID: {{ driver.driver_PD }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ driver.contact_number|default:"-" }}</td>
+                                        <td>
+                                            <form method="post" action="{% url 'management:toggle_driver_status' driver.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <select name="status" class="form-select form-select-sm driver-status-dropdown" onchange="this.form.submit()">
+                                                    <option value="active" {% if driver.status == 'active' %}selected{% endif %}>Active</option>
+                                                    <option value="inactive" {% if driver.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                                                    <option value="on_leave" {% if driver.status == 'on_leave' %}selected{% endif %}>On Leave</option>
+                                                    <option value="fired" {% if driver.status == 'fired' %}selected{% endif %}>Fired</option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge {% if driver.status == 'active' %}bg-light text-dark border border-secondary{% else %}bg-dark text-light{% endif %}">
+                                                {{ driver.get_status_display }}
+                                                {% if driver.id in delinquent_driver_ids %}
+                                                <span class="text-danger ms-1" title="Delinquent"><i class="fas fa-exclamation-triangle"></i></span>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td class="text-success">₱{{ driver.savings|floatformat:2 }}</td>
+                                        <td class="text-danger">₱{{ driver.debt|floatformat:2 }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <i class="bi bi-emoji-frown fs-4 d-block mb-2"></i>
+                                            No drivers found
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Driver Overview Pagination -->
+                        <div class="mt-4">
+                            <nav aria-label="Driver Overview pagination">
+                                <ul class="pagination justify-content-center">
+                                    {% if drivers.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" data-page="{{ drivers.previous_page_number }}">Previous</a>
+                                    </li>
+                                    {% endif %}
+
+                                    {% with ''|center:drivers.paginator.num_pages as range %}
+                                    {% for _ in range %}
+                                        {% with forloop.counter as num %}
+                                            {% if num > drivers.number|add:"-3" and num < drivers.number|add:"3" %}
+                                            <li class="page-item {% if num == drivers.number %}active{% endif %}">
+                                                <a class="page-link text-dark" href="#" data-page="{{ num }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                    {% endwith %}
+
+                                    {% if drivers.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" data-page="{{ drivers.next_page_number }}">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User History Modal -->
+        <div class="modal fade" id="userHistoryModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title text-dark">Activity Logs</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-custom">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>Details</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in activity_logs %}
+                                    <tr>
+                                        <td>{{ log.user.username }}</td>
+                                        <td>{{ log.get_action_display }}</td>
+                                        <td>{{ log.details }}</td>
+                                        <td>{{ log.timestamp|date:"M d, Y H:i" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">No activity logs found</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="mt-4">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    {% if activity_logs.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link text-dark" href="#" data-page="{{ activity_logs.previous_page_number }}">Previous</a>
+                                    </li>
+                                    {% endif %}
+
+                                    {% with ''|center:activity_logs.paginator.num_pages as range %}
+                                    {% for _ in range %}
+                                        {% with forloop.counter as num %}
+                                            {% if num > activity_logs.number|add:"-3" and num < activity_logs.number|add:"3" %}
+                                            <li class="page-item {% if num == activity_logs.number %}active{% endif %}">
+                                                <a class="page-link text-dark" href="#" data-page="{{ num }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                    {% endwith %}
+
+                                    {% if activity_logs.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link text-dark" href="#" data-page="{{ activity_logs.next_page_number }}">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Modal -->
+        <div class="modal fade" id="dashboardModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Payment Amount</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Remittance Amount -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h4 class="mb-0 remittance-amount-display">₱{{ remittance_amount.amount }}</h4>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#remittanceAmountModal">
+                                        <i class="fas fa-edit me-2"></i>Edit Amount
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remittance Amount Modal -->
+        <div class="modal fade" id="remittanceAmountModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Set Remittance Amount</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="remittanceAmountForm">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="remittanceAmount" class="form-label">Amount (₱)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₱</span>
+                                    <input type="number" class="form-control" id="remittanceAmount" 
+                                           name="amount" step="0.01" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Amount</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Accounts Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Roles</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in all_users %}
+                            <tr>
+                                <td>{{ user.user.username }}</td>
+                                <td>{{ user.user.email }}</td>
+                                <td>
+                                    <span class="badge {% if user.status == 'active' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ user.status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'management:update_user_roles' user.user.id %}" class="d-inline user-role-form" data-user-id="{{ user.user.id }}">
+                                        {% csrf_token %}
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input role-checkbox" type="checkbox" name="is_staff" id="isStaff{{ user.user.id }}" value="1" {% if user.user.is_staff and not user.user.is_superuser %}checked{% endif %}>
+                                            <label class="form-check-label" for="isStaff{{ user.user.id }}">Staff</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input role-checkbox" type="checkbox" name="is_superuser" id="isSuperuser{{ user.user.id }}" value="1" {% if user.user.is_superuser %}checked{% endif %}>
+                                            <label class="form-check-label" for="isSuperuser{{ user.user.id }}">Admin</label>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'management:toggle_user_status' user.user.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm {% if user.status == 'active' %}btn-danger{% else %}btn-success{% endif %}">
+                                            {% if user.status == 'active' %}Deactivate{% else %}Activate{% endif %}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Status Change Modal for each unit -->
+    {% for unit in units %}
+    <div class="modal fade" id="statusChangeModal{{ unit.id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title">Change Unit Status - {{ unit.unit_PO }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" class="status-change-form" data-unit-id="{{ unit.id }}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="new_status{{ unit.id }}" class="form-label">New Status</label>
+                            <select class="form-select" id="new_status{{ unit.id }}" name="status" required>
+                                <option value="stand_by">Stand-by</option>
+                                <option value="out_of_service">Out of Service</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status_notes{{ unit.id }}" class="form-label">Notes (Optional)</label>
+                            <textarea class="form-control" id="status_notes{{ unit.id }}" name="notes" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentRemittanceAmount = 0;
+
+        // Load current remittance amount
+        function loadRemittanceAmount() {
+            fetch("{% url 'management:update_remittance_amount' %}")
+                .then(response => response.json())
+                .then(data => {
+                    currentRemittanceAmount = parseFloat(data.amount);
+                    document.getElementById('remittanceAmount').value = data.amount;
+                    // Update all displayed amounts
+                    document.querySelectorAll('.remittance-amount-display').forEach(el => {
+                        el.textContent = `₱${data.amount}`;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading remittance amount:', error);
+                    showError('Failed to load remittance amount');
+                });
+        }
+
+        // Handle Unit Overview pagination
+        function loadUnitOverview(page) {
+            const modalBody = document.querySelector('#unitOverviewModal .modal-body');
+            
+            // Show loading state
+            const originalContent = modalBody.innerHTML;
+            modalBody.innerHTML = `
+                <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            fetch(`{% url 'management:unit_overview_pagination' %}?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalBody.innerHTML = data.html;
+                    attachUnitPaginationListeners();
+                })
+                .catch(error => {
+                    console.error('Error loading page:', error);
+                    modalBody.innerHTML = originalContent;
+                    showError('Failed to load unit overview');
+                });
+        }
+
+        function attachUnitPaginationListeners() {
+            document.querySelectorAll('#unitOverviewModal .pagination .page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    loadUnitOverview(page);
+                });
+            });
+        }
+
+        // Handle Driver Overview pagination
+        function loadDriverOverview(page) {
+            const modalBody = document.querySelector('#driverOverviewModal .modal-body');
+            
+            // Show loading state
+            const originalContent = modalBody.innerHTML;
+            modalBody.innerHTML = `
+                <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            fetch(`{% url 'management:driver_overview_pagination' %}?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalBody.innerHTML = data.html;
+                    attachDriverPaginationListeners();
+                })
+                .catch(error => {
+                    console.error('Error loading page:', error);
+                    modalBody.innerHTML = originalContent;
+                    showError('Failed to load driver overview');
+                });
+        }
+
+        function attachDriverPaginationListeners() {
+            document.querySelectorAll('#driverOverviewModal .pagination .page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    loadDriverOverview(page);
+                });
+            });
+        }
+
+        // Handle activity logs pagination
+        function loadActivityLogs(page) {
+            const modalBody = document.querySelector('#userHistoryModal .modal-body');
+            
+            // Show loading state
+            const originalContent = modalBody.innerHTML;
+            modalBody.innerHTML = `
+                <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            fetch(`{% url 'management:activity_logs_pagination' %}?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalBody.innerHTML = data.html;
+                    attachActivityLogsPaginationListeners();
+                })
+                .catch(error => {
+                    console.error('Error loading page:', error);
+                    modalBody.innerHTML = originalContent;
+                    showError('Failed to load activity logs');
+                });
+        }
+
+        function attachActivityLogsPaginationListeners() {
+            document.querySelectorAll('#userHistoryModal .pagination .page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    loadActivityLogs(page);
+                });
+            });
+        }
+
+        // Initial attachment of pagination listeners
+        attachUnitPaginationListeners();
+        attachDriverPaginationListeners();
+        attachActivityLogsPaginationListeners();
+
+        // Add event listeners for modal show to ensure pagination works when reopened
+        document.getElementById('unitOverviewModal').addEventListener('show.bs.modal', function() {
+            attachUnitPaginationListeners();
+        });
+
+        document.getElementById('driverOverviewModal').addEventListener('show.bs.modal', function() {
+            attachDriverPaginationListeners();
+        });
+
+        document.getElementById('userHistoryModal').addEventListener('show.bs.modal', function() {
+            attachActivityLogsPaginationListeners();
+        });
+
+        // Initial load
+        loadRemittanceAmount();
+
+        // Handle form submission
+        document.getElementById('remittanceAmountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const amount = parseFloat(formData.get('amount'));
+            
+            // Validate amount
+            if (isNaN(amount) || amount <= 0) {
+                showError('Please enter a valid amount greater than 0');
+                return;
+            }
+
+            // Show loading state
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+            
+            fetch("{% url 'management:update_remittance_amount' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-success alert-dismissible fade show mt-2';
+                    alert.innerHTML = `
+                        Remittance amount updated to ₱${data.amount}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    document.querySelector('.content').prepend(alert);
+                    
+                    // Update all displayed amounts
+                    document.querySelectorAll('.remittance-amount-display').forEach(el => {
+                        el.textContent = `₱${data.amount}`;
+                    });
+                    
+                    // Update current amount
+                    currentRemittanceAmount = parseFloat(data.amount);
+                    
+                    // Close modal
+                    bootstrap.Modal.getInstance(document.getElementById('remittanceAmountModal')).hide();
+                } else {
+                    throw new Error(data.error || 'Failed to update remittance amount');
+                }
+            })
+            .catch(error => {
+                showError(error.message);
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            });
+        });
+
+        function showError(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-danger alert-dismissible fade show mt-2';
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.content').prepend(alert);
+        }
+
+        // Add event listener for modal close to reset form
+        document.getElementById('remittanceAmountModal').addEventListener('hidden.bs.modal', function() {
+            loadRemittanceAmount(); // Reload current amount when modal is closed
+        });
+
+        // Handle status change form submissions
+        document.querySelectorAll('.status-change-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const unitId = this.dataset.unitId;
+                const formData = new FormData(this);
+                
+                fetch('/management/update-unit-status/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        const alert = document.createElement('div');
+                        alert.className = 'alert alert-success alert-dismissible fade show mt-2';
+                        alert.innerHTML = `
+                            Status updated successfully for unit ${data.unit}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        document.querySelector('.content').prepend(alert);
+                        
+                        // Close modal
+                        bootstrap.Modal.getInstance(document.getElementById(`statusChangeModal${unitId}`)).hide();
+                        
+                        // Reload page after a short delay
+                        setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                        throw new Error(data.error || 'Failed to update status');
+                    }
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+            });
+        });
+
+        // Enforce only one role checkbox can be checked at a time per user and update via AJAX
+        document.querySelectorAll('.user-role-form').forEach(function(form) {
+            const staffBox = form.querySelector('input[name="is_staff"]');
+            const adminBox = form.querySelector('input[name="is_superuser"]');
+            const userId = form.getAttribute('data-user-id');
+            function sendRoleUpdate() {
+                // Always ensure at least one is checked
+                if (!staffBox.checked && !adminBox.checked) {
+                    staffBox.checked = true;
+                }
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('csrfmiddlewaretoken', form.querySelector('[name=csrfmiddlewaretoken]').value);
+                if (staffBox.checked) formData.append('is_staff', '1');
+                if (adminBox.checked) formData.append('is_superuser', '1');
+                fetch(`/management/update-user-roles/${userId}/`, {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.ok ? response.text() : Promise.reject(response))
+                .then(() => {
+                    // Show a quick success message
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-success alert-dismissible fade show mt-2';
+                    alert.innerHTML = `Roles updated successfully.<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+                    document.querySelector('.content').prepend(alert);
+                    setTimeout(() => alert.remove(), 2000);
+                })
+                .catch(() => {
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-danger alert-dismissible fade show mt-2';
+                    alert.innerHTML = `Failed to update roles.<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+                    document.querySelector('.content').prepend(alert);
+                    setTimeout(() => alert.remove(), 2000);
+                });
+            }
+            if (staffBox && adminBox) {
+                staffBox.addEventListener('change', function() {
+                    if (this.checked) adminBox.checked = false;
+                    if (!this.checked && !adminBox.checked) staffBox.checked = true;
+                    sendRoleUpdate();
+                });
+                adminBox.addEventListener('change', function() {
+                    if (this.checked) staffBox.checked = false;
+                    if (!this.checked && !staffBox.checked) staffBox.checked = true;
+                    sendRoleUpdate();
+                });
+            }
+        });
+    });
+    </script>
+</body>
+</html> 

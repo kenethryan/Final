@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Navigation</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/all.min.css' %}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .sidebar .logo {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        .sidebar .logo a {
+            display: inline-block;
+            padding: 0;
+        }
+        .sidebar .logo img {
+            width: 200px;
+            height: 150px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .sidebar .logo img:hover {
+            transform: scale(1.05);
+        }
+        .sidebar a {
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 1.1em;
+            color: white;
+            display: block;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        .sidebar a:hover {
+            background-color: #575d63;
+            padding-left: 25px;
+            border-left: 3px solid #0d6efd;
+        }
+        .sidebar a.active {
+            background-color: #575d63;
+            border-left: 3px solid #0d6efd;
+        }
+        .content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .date-time {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1rem;
+            color: #343a40;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1001;
+            background: #343a40;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-250px);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+            }
+            .content {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+        .logout-icon {
+            font-size: 1.5rem;
+            color: white;
+            text-align: center;
+            margin-top: auto;
+            padding: 15px 0;
+            border-top: 1px solid #575d63;
+        }
+        .logout-icon a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .logout-icon a:hover {
+            color: #f8f9fa;
+        }
+        /* Sidebar dropdown menu fix */
+        .sidebar .dropdown-menu {
+            position: static !important;
+            float: none;
+            box-shadow: none;
+            background: #343a40;
+            border: none;
+            width: 100%;
+            margin: 0;
+            padding: 8px 0 8px 0;
+            border-radius: 10px;
+            left: 0;
+        }
+        .sidebar .dropdown-item {
+            color: #fff;
+            padding-left: 2.5rem;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-left: 4px solid transparent;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            margin-bottom: 2px;
+            border-radius: 0 20px 20px 0;
+        }
+        .sidebar .dropdown-item:hover, .sidebar .dropdown-item.active {
+            background: #23272b;
+            color: #0d6efd;
+            border-left: 4px solid #0d6efd;
+        }
+        .sidebar .dropdown-menu .dropdown-item:last-child {
+            margin-bottom: 0;
+        }
+        .sidebar .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: 0.5em;
+            vertical-align: 0.1em;
+            content: "";
+            border-top: 0.5em solid #fff;
+            border-right: 0.4em solid transparent;
+            border-left: 0.4em solid transparent;
+        }
+        .sidebar .dropdown-toggle[aria-expanded="true"]::after {
+            border-top: none;
+            border-bottom: 0.5em solid #fff;
+        }
+        .sidebar .nav-item.dropdown {
+            position: relative;
+        }
+        .sidebar .dropdown-menu {
+            position: absolute !important;
+            left: 0;
+            right: 0;
+            top: 100%;
+            min-width: 180px;
+            margin-top: 0;
+            transform: none !important;
+            border-radius: 10px;
+            z-index: 1051;
+        }
+    </style>
+</head>
+<body>
+    <button class="sidebar-toggle">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <div class="sidebar">
+        <div>
+            <div class="logo">
+                <img src="{% static 'image/logo1.png' %}" alt="Company Logo" class="logo-img">
+            </div>
+            <nav class="nav flex-column">
+                {% if user.is_superuser %}
+                <a href="{% url 'management:dashboard' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                    <i class="fa fa-home me-2"></i>Home
+                </a>
+                <a href="{% url 'management:accounts' %}" class="nav-link {% if 'accounts' in request.path %}active{% endif %}">
+                    <i class="fa fa-user-shield me-2"></i>Accounts
+                </a>
+                {% endif %}
+                <a href="{% url 'management:unit_list' %}" class="nav-link {% if 'units' in request.path %}active{% endif %}">
+                    <i class="fa fa-truck me-2"></i>Units
+                </a>
+                <a href="{% url 'management:driver_list' %}" class="nav-link {% if 'drivers' in request.path %}active{% endif %}">
+                    <i class="fa fa-users me-2"></i>Drivers
+                </a>
+                <a href="{% url 'management:manage_damage_parts' %}" class="nav-link {% if 'maintenance' in request.path %}active{% endif %}">
+                    <i class="fa fa-tools me-2"></i>Maintenance
+                </a>
+                <a href="{% url 'management:tracking' %}" class="nav-link {% if 'tracking' in request.path %}active{% endif %}">
+                    <i class="fa fa-map-marker-alt me-2"></i>Tracking
+                </a>
+            </nav>
+        </div>
+        <div class="logout-icon">
+            <a href="{% url 'account:logout' %}">
+                <i class="fa fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+
+            // Toggle sidebar on button click
+            toggleButton.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768 && !sidebar.contains(event.target) &&
+                    event.target !== toggleButton && !toggleButton.contains(event.target)) {
+                    sidebar.classList.remove('show');
+                }
+            });
+
+            // Highlight active link based on current URL
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.sidebar a.nav-link');
+
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Date/time updater for the top right
+            function updateDateTime() {
+                const now = new Date();
+                const date = now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                const dateTimeElem = document.querySelector('.date-time');
+                if (dateTimeElem) {
+                    dateTimeElem.textContent = `${date} at ${time}`;
+                }
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        });
+    </script>
+</body>
+</html>

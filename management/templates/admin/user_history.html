@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logs</title>
+    <link rel="stylesheet" href="{% static 'management/static/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'management/static/bootstrap-icons/bootstrap-icons.css' %}">
+    <style>
+        body {
+            background-color: #0A1F24;
+            color: #fff;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .table-custom {
+            background-color: #1B3B48;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table-custom thead {
+            background-color: #2D4D5A;
+            color: #3D9DB3;
+        }
+        .table-custom th,
+        .table-custom td {
+            border-color: #2D4D5A !important;
+            padding: 15px;
+        }
+        .nav-admin {
+            background-color: #1B3B48;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        {% include 'admin/navigation.html' %}
+
+        <div class="table-custom">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in activity_logs %}
+                    <tr>
+                        <td>{{ log.user.username }}</td>
+                        <td>{{ log.get_action_display }}</td>
+                        <td>{{ log.details }}</td>
+                        <td>{{ log.timestamp|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">No activity logs found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if activity_logs.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ activity_logs.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in activity_logs.paginator.page_range %}
+                    <li class="page-item {% if num == activity_logs.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if activity_logs.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ activity_logs.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</body>
+</html> 

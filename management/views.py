@@ -119,8 +119,11 @@ def dashboard(request):
     weekly_income = [0] * 7
     for i in range(7):
         day = week_start + timedelta(days=i)
+        day_start = timezone.make_aware(datetime.combine(day, datetime.min.time()))
+        day_end = timezone.make_aware(datetime.combine(day, datetime.max.time()))
         day_income = remittances.filter(
-            date=day
+            date__gte=day_start,
+            date__lte=day_end
         ).aggregate(
             total=Sum('remit_amount')
         )['total'] or 0
@@ -130,9 +133,14 @@ def dashboard(request):
     monthly_income = [0] * 12
     current_year = timezone.now().year
     for month in range(1, 13):
+        month_start = timezone.make_aware(datetime(current_year, month, 1))
+        if month == 12:
+            month_end = timezone.make_aware(datetime(current_year + 1, 1, 1)) - timedelta(seconds=1)
+        else:
+            month_end = timezone.make_aware(datetime(current_year, month + 1, 1)) - timedelta(seconds=1)
         month_income = remittances.filter(
-            date__year=current_year,
-            date__month=month
+            date__gte=month_start,
+            date__lte=month_end
         ).aggregate(
             total=Sum('remit_amount')
         )['total'] or 0
